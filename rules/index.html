@@ -1,0 +1,307 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Verilog Rules</title>
+        <link rel="stylesheet" href="/riscv32i-arch-course-site-pages/styles/site.css">
+
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300..700&family=Red+Hat+Display:ital,wght@0,300..900;1,300..900&family=Red+Hat+Text:ital,wght@0,300..700;1,300..700&display=swap" rel="stylesheet">
+    </head>
+
+    <body class="project">
+        
+        <h1 class="project-header">Verilog Rules</h1>
+        <h2 class="project-subheader">UW—Madison ECE 552: Fall 2026</h2>
+        <p class="back-link"><a href="/riscv32i-arch-course-site-pages/">Back to Course Home</a></p>
+
+        <div class="table-of-contents">
+        <h3 class="table-of-contents-header">Table of Contents</h3>
+            <ul class="table-of-contents-list">
+                
+                
+                <li class="table-of-contents-item"><a href="#operator-restrictions">Operator Restrictions</a></li>
+                
+                
+                
+                <li class="table-of-contents-item"><a href="#constant-operations">Constant Operations</a></li>
+                
+                
+                
+                <li class="table-of-contents-item"><a href="#builtin-tasks-and-functions">Builtin Tasks and Functions</a></li>
+                
+                
+                
+                <li class="table-of-contents-item"><a href="#behavioral-logic-and-control-flow">Behavioral Logic &amp; Control Flow</a></li>
+                
+                
+                
+                <li class="table-of-contents-item"><a href="#timing-and-event-control">Timing &amp; Event Control</a></li>
+                
+                
+                
+                <li class="table-of-contents-item"><a href="#literals-and-types">Literals &amp; Types</a></li>
+                
+                
+            </ul>
+        </div>
+
+        <div class="instructions-box">
+<p>This document outlines the specific Verilog subset permitted for course
+projects. The primary goal is to ensure all code is synthesizable and reflects
+actual hardware components rather than abstract simulation models.
+Additionally, SystemVerilog and advanced constructs are intentionally excluded
+to encourage you think about the underlying hardware, and improve compatibility
+with some tools.</p>
+<p>A Verilog code checker is used to verify that submissions follow these rules.
+False positives are possible - if the code appears correct but the checker is
+complaining, please post on Piazza or contact the teaching staff by email.</p>
+<blockquote>
+<p><strong>Run it yourself before submitting.</strong> Starting with Project 2, the exact
+same checker is included at the root of the
+<a href="https://github.com/wiscarch/riscv32i-arch-course-starter-fa26">riscv32i-arch-course-starter-fa26</a>
+repository (<code>python-ece552/</code>) -- see its README for install/usage. Once
+installed:</p>
+<pre class="shiki catppuccin-latte" style="background-color:#eff1f5;color:#4c4f69" tabindex="0"><code><span class="line"><span style="color:#1E66F5;font-style:italic">ece552</span><span style="color:#40A02B"> validate</span><span style="color:#40A02B"> -w</span><span style="color:#4C4F69"> *</span><span style="color:#40A02B">.v</span></span>
+<span class="line"></span></code></pre>
+<p>This lets you catch a rule violation locally instead of finding out from a
+failed Gradescope submission.</p>
+</blockquote>
+<blockquote>
+<p><strong>Note</strong>: These rules only apply to the synthesizable processor. You can use
+any features you want for your testbench and verification, but do not upload
+this code to Gradescope.</p>
+</blockquote>
+</div>
+<div class="instructions-box">
+<h2 id="operator-restrictions" tabindex="-1">Operator Restrictions</h2>
+<p>The following operators are allowed (and encouraged when appropriate):</p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Operator</th>
+<th>Example</th>
+<th>Operator</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Bitwise AND</td>
+<td><code>x &amp; y</code></td>
+<td>AND Reduction</td>
+<td><code>&amp;x</code></td>
+</tr>
+<tr>
+<td>Bitwise OR</td>
+<td><code>x | y</code></td>
+<td>OR Reduction</td>
+<td><code>|x</code></td>
+</tr>
+<tr>
+<td>Bitwise XOR</td>
+<td><code>x ^ y</code></td>
+<td>XOR Reduction</td>
+<td><code>^x</code></td>
+</tr>
+<tr>
+<td>Bitwise XNOR</td>
+<td><code>x ~^ y</code></td>
+<td>XNOR Reduction</td>
+<td><code>~^x</code></td>
+</tr>
+<tr>
+<td>Bitwise Invert</td>
+<td><code>~x</code></td>
+<td>NAND Reduction</td>
+<td><code>~&amp;x</code></td>
+</tr>
+<tr>
+<td>Ternary</td>
+<td><code>sel ? x : y</code></td>
+<td>NOR Reduction</td>
+<td><code>~|x</code></td>
+</tr>
+<tr>
+<td>Equality</td>
+<td><code>x == y</code></td>
+<td>Constant Shift Left</td>
+<td><code>x &lt;&lt; const</code></td>
+</tr>
+<tr>
+<td>Inequality</td>
+<td><code>x != y</code></td>
+<td>Constant Shift Right</td>
+<td><code>x &gt;&gt; const</code></td>
+</tr>
+<tr>
+<td>Concatenation</td>
+<td><code>{x, y}</code></td>
+<td>Replication</td>
+<td><code>{const{x}}</code></td>
+</tr>
+<tr>
+<td>Binary Addition</td>
+<td><code>x + y</code></td>
+<td>Binary Subtraction</td>
+<td><code>x - y</code></td>
+</tr>
+<tr>
+<td>Unary Negation</td>
+<td><code>-x</code></td>
+<td>Greater Than</td>
+<td><code>x &gt; y</code></td>
+</tr>
+<tr>
+<td>Less Than</td>
+<td><code>x &lt; y</code></td>
+<td>Greater Than or Equal</td>
+<td><code>x &gt;= y</code></td>
+</tr>
+<tr>
+<td>Less Than or Equal</td>
+<td><code>x &lt;= y</code></td>
+<td>Logical AND</td>
+<td><code>x &amp;&amp; y</code></td>
+</tr>
+<tr>
+<td>Logical OR</td>
+<td><code>x || y</code></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</div><blockquote>
+<p><strong>Note</strong>: <code>&amp;&amp;</code>/<code>\|\|</code> are only safe to use when <code>x</code> and <code>y</code> are already
+1-bit signals. On wider buses, the checker treats the implicit reduction
+as a compile error -- your submission will not build, and you'll receive
+0 pts with no partial credit. Use an explicit comparison (<code>x != 0</code>) or
+reduction operator instead if you need to combine multi-bit signals.</p>
+</blockquote>
+<p>The following operators are <strong>not allowed</strong> as they synthesize poorly or do not
+map to any hardware.</p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Operator</th>
+<th>Example</th>
+<th>Operator</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Strict Equality</td>
+<td><code>x === y</code></td>
+<td>Strict Inequality</td>
+<td><code>x !== y</code></td>
+</tr>
+<tr>
+<td>Multiplication</td>
+<td><code>x * y</code></td>
+<td>Division</td>
+<td><code>x / y</code></td>
+</tr>
+<tr>
+<td>Modulo</td>
+<td><code>x % y</code></td>
+<td>Power</td>
+<td><code>x ** y</code></td>
+</tr>
+<tr>
+<td>Shift Left (Variable)</td>
+<td><code>x &lt;&lt; y</code></td>
+<td>Wildcard Equality</td>
+<td><code>x ==? y</code></td>
+</tr>
+<tr>
+<td>Shift Right (Variable)</td>
+<td><code>x &gt;&gt; y</code></td>
+<td>Wildcard Inequality</td>
+<td><code>x !=? y</code></td>
+</tr>
+<tr>
+<td>Arithmetic Shift Right</td>
+<td><code>x &gt;&gt;&gt; y</code></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</div><p>In addition, do not use <code>signed</code> logic (including the <code>$signed()</code> function) as
+it leads to weird behavior and is a common source of bugs.</p>
+<blockquote>
+<p><strong>Hint</strong>: If you need an &quot;unsupported&quot; operation like multiplication or a
+variable shift, you must build that component structurally using the allowed
+bitwise and boolean operators.</p>
+</blockquote>
+<h2 id="constant-operations" tabindex="-1">Constant Operations</h2>
+<p>Some operations are only allowed when operated on constant expressions. For
+example, shifts are allowed by constant amounts:</p>
+<pre class="shiki catppuccin-latte" style="background-color:#eff1f5;color:#4c4f69" tabindex="0"><code><span class="line"><span style="color:#8839EF">wire</span><span style="color:#7C7F93"> [</span><span style="color:#FE640B">7</span><span style="color:#179299">:</span><span style="color:#FE640B">0</span><span style="color:#7C7F93">]</span><span style="color:#4C4F69"> x </span><span style="color:#179299">=</span><span style="color:#FE640B"> 8'hAA</span><span style="color:#4C4F69">;</span></span>
+<span class="line"><span style="color:#8839EF">wire</span><span style="color:#7C7F93"> [</span><span style="color:#FE640B">7</span><span style="color:#179299">:</span><span style="color:#FE640B">0</span><span style="color:#7C7F93">]</span><span style="color:#4C4F69"> y </span><span style="color:#179299">=</span><span style="color:#4C4F69"> x </span><span style="color:#179299">&#x3C;&#x3C;</span><span style="color:#FE640B"> 2</span><span style="color:#4C4F69">;</span></span>
+<span class="line"></span></code></pre>
+<p>But not by variable amounts:</p>
+<pre class="shiki catppuccin-latte" style="background-color:#eff1f5;color:#4c4f69" tabindex="0"><code><span class="line"><span style="color:#DF8E1D;font-style:italic">input</span><span style="color:#8839EF"> wire</span><span style="color:#7C7F93"> [</span><span style="color:#FE640B">2</span><span style="color:#179299">:</span><span style="color:#FE640B">0</span><span style="color:#7C7F93">]</span><span style="color:#4C4F69"> amount;</span></span>
+<span class="line"><span style="color:#7C7F93;font-style:italic">// ...</span></span>
+<span class="line"><span style="color:#8839EF">wire</span><span style="color:#7C7F93"> [</span><span style="color:#FE640B">7</span><span style="color:#179299">:</span><span style="color:#FE640B">0</span><span style="color:#7C7F93">]</span><span style="color:#4C4F69"> x </span><span style="color:#179299">=</span><span style="color:#FE640B"> 8'hAA</span><span style="color:#4C4F69">;</span></span>
+<span class="line"><span style="color:#8839EF">wire</span><span style="color:#7C7F93"> [</span><span style="color:#FE640B">7</span><span style="color:#179299">:</span><span style="color:#FE640B">0</span><span style="color:#7C7F93">]</span><span style="color:#4C4F69"> y </span><span style="color:#179299">=</span><span style="color:#4C4F69"> x </span><span style="color:#179299">&#x3C;&#x3C;</span><span style="color:#4C4F69"> amount;</span></span>
+<span class="line"></span></code></pre>
+<h2 id="builtin-tasks-and-functions" tabindex="-1">Builtin Tasks and Functions</h2>
+<p>In general, builtin functions like <code>$display()</code> and <code>$assert()</code> are not
+synthesizable and disallowed. An exception is the <code>$clog2()</code> function when a
+constant expression is passed as input - this can be used to calculate the
+number of bits needed.</p>
+<h2 id="behavioral-logic-and-control-flow" tabindex="-1">Behavioral Logic &amp; Control Flow</h2>
+<p>Many control flow constructs synthesize poorly or are not allowed: <code>for</code>,
+<code>while</code>, <code>do...while</code>, <code>repeat</code>, <code>forever</code>, <code>join</code>, <code>wait</code>, <code>disable</code>.</p>
+<p>This applies to <em>procedural</em> loops -- inside an <code>always</code>/<code>initial</code> block.
+Structural, synthesizable loop generation with <code>generate</code>/<code>genvar</code> (for
+instantiating repeated hardware, e.g. a ripple-carry chain or a barrel
+shifter's mux stages) is always fine and is not restricted by this rule.</p>
+<p>Case statements are allowed as an alternative to nested ternary expressions.
+However, they must be fully specified and have a default case to avoid
+inferring a latch.</p>
+<p>Conditional statements (<code>if/else</code>) are only allowed within clocked blocks to
+infer registers:</p>
+<pre class="shiki catppuccin-latte" style="background-color:#eff1f5;color:#4c4f69" tabindex="0"><code><span class="line"><span style="color:#8839EF">reg</span><span style="color:#7C7F93"> [</span><span style="color:#FE640B">7</span><span style="color:#179299">:</span><span style="color:#FE640B">0</span><span style="color:#7C7F93">]</span><span style="color:#4C4F69"> x;</span></span>
+<span class="line"><span style="color:#8839EF">always</span><span style="color:#179299"> @</span><span style="color:#4C4F69">(</span><span style="color:#8839EF">posedge</span><span style="color:#4C4F69"> i_clk) </span><span style="color:#8839EF">begin</span></span>
+<span class="line"><span style="color:#8839EF">    if</span><span style="color:#4C4F69"> (i_rst)</span></span>
+<span class="line"><span style="color:#4C4F69">        x </span><span style="color:#179299">&#x3C;=</span><span style="color:#FE640B"> 8'h00</span><span style="color:#4C4F69">;</span></span>
+<span class="line"><span style="color:#8839EF">    else</span></span>
+<span class="line"><span style="color:#4C4F69">        x </span><span style="color:#179299">&#x3C;=</span><span style="color:#4C4F69"> x </span><span style="color:#179299">+</span><span style="color:#FE640B"> 1</span><span style="color:#4C4F69">;</span></span>
+<span class="line"><span style="color:#8839EF">end</span></span>
+<span class="line"></span></code></pre>
+<p>They are <strong>not allowed</strong> in combinational logic (use a case statement or
+ternary instead):</p>
+<pre class="shiki catppuccin-latte" style="background-color:#eff1f5;color:#4c4f69" tabindex="0"><code><span class="line"><span style="color:#8839EF">reg</span><span style="color:#7C7F93"> [</span><span style="color:#FE640B">7</span><span style="color:#179299">:</span><span style="color:#FE640B">0</span><span style="color:#7C7F93">]</span><span style="color:#4C4F69"> x;</span></span>
+<span class="line"><span style="color:#8839EF">always</span><span style="color:#179299"> @</span><span style="color:#4C4F69">(</span><span style="color:#179299">*</span><span style="color:#4C4F69">) </span><span style="color:#8839EF">begin</span></span>
+<span class="line"><span style="color:#8839EF">    if</span><span style="color:#4C4F69"> (i_sel)</span></span>
+<span class="line"><span style="color:#4C4F69">        x </span><span style="color:#179299">=</span><span style="color:#FE640B"> 8'hAA</span><span style="color:#4C4F69">;</span></span>
+<span class="line"><span style="color:#8839EF">    else</span></span>
+<span class="line"><span style="color:#4C4F69">        x </span><span style="color:#179299">=</span><span style="color:#FE640B"> 8'hBB</span><span style="color:#4C4F69">;</span></span>
+<span class="line"><span style="color:#8839EF">end</span></span>
+<span class="line"></span></code></pre>
+<blockquote>
+<p><strong>Note</strong>: <code>rf.v</code> is exempt from this ban -- behavioral <code>if</code>/<code>else</code> is
+permitted there (see the register file problem on the Project 2 page for
+details, once it's released).</p>
+</blockquote>
+<h2 id="timing-and-event-control" tabindex="-1">Timing &amp; Event Control</h2>
+<p>Explicit timing controls are not allowed in synthesizable hardware, as timing
+is governed by the system clock.</p>
+<h3 id="simulation-timing" tabindex="-1">Simulation Timing</h3>
+<p>Statements involving delays (#), cycle delays (##), or repeated events are not allowed.</p>
+<h3 id="signal-events" tabindex="-1">Signal Events</h3>
+<p>Sensitivity lists may only use <code>posedge</code> or implicit <code>@(*)</code> signals.</p>
+<p>The <code>negedge</code> trigger and <code>iff</code> conditions on events are not allowed.</p>
+<h2 id="literals-and-types" tabindex="-1">Literals &amp; Types</h2>
+<p>The following types and expressions are not allowed: real numbers, string literals, time literals, and null.</p>
+<p>Class-based expressions (e.g., new, copy) are strictly for simulation and cannot be used.</p>
+</div>
+
+    </body>
+</html>
