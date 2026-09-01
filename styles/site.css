@@ -35,6 +35,14 @@
 
   --sans: "Red Hat Display", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
   --mono: "Red Hat Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  /* Shared height of the two boxes that make up the page's header band:
+     the rail's wordmark head and the main column's breadcrumb topbar. Both
+     are min-height: var(--head-h) with box-sizing: border-box, so their
+     bottom hairlines land on the same pixel row and read as one unbroken
+     rule across the page. Neither box may set vertical padding large
+     enough to grow past it. */
+  --head-h: 56px;
 }
 
 * { box-sizing: border-box; }
@@ -82,7 +90,9 @@ a { color: inherit; }
   flex-shrink: 0;
   background: var(--paper-2);
   border-right: 1px solid var(--rule);
-  padding: 28px 0 60px;
+  /* No padding-top: the rail head is the first child and has to start at
+     y=0 so its bottom hairline lines up with the topbar's. */
+  padding: 0 0 60px;
   position: sticky;
   top: 0;
   /* align-self keeps this a sticky box of its own rather than a stretched
@@ -96,17 +106,31 @@ a { color: inherit; }
   overflow-y: auto;
 }
 .wa-docs-rail-head {
-  padding: 0 24px 28px;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  min-height: var(--head-h);
+  padding: 0 24px;
   border-bottom: 1px solid var(--rule);
   margin-bottom: 24px;
 }
+/* Term badge, inline to the right of the wordmark rather than stacked
+   under it -- stacking is what made the rail head twice the topbar's
+   height. A hairline outline, no fill: the same structure-by-rules
+   treatment as the rest of the shell. 10px text on a 1 line-height plus
+   4px/1px of padding and border makes it exactly 20px tall, matching the
+   wordmark's own line box, so the row centres cleanly. */
 .wa-docs-rail-version {
   font-family: var(--mono);
   font-size: 10px;
+  line-height: 1;
   color: var(--ink-faint);
-  margin-top: 8px;
   letter-spacing: 0.05em;
   text-transform: uppercase;
+  white-space: nowrap;
+  padding: 4px 6px;
+  border: 1px solid var(--rule);
+  border-radius: 3px;
 }
 .wa-docs-rail-nav { padding: 0 16px 0 22px; }
 .wa-docs-rail-link {
@@ -137,7 +161,10 @@ a { color: inherit; }
   align-items: center;
   justify-content: space-between;
   gap: 16px;
-  padding: 16px 48px;
+  /* Height comes from --head-h, not from padding, so it stays locked to
+     the rail head; the 8px is only a floor for a breadcrumb that wraps. */
+  min-height: var(--head-h);
+  padding: 8px 48px;
   border-bottom: 1px solid var(--rule);
   font-size: 13px;
   position: sticky;
@@ -185,14 +212,22 @@ a { color: inherit; }
   flex: 1;
   display: grid;
   grid-template-columns: minmax(0, 1fr) 200px;
-  gap: 56px;
-  padding: 56px 64px 80px;
+  gap: 48px;
+  padding: 56px 56px 80px;
 }
 .wa-docs-content.is-single-column { grid-template-columns: minmax(0, 1fr); }
 
+/* 900px, not the 760px this started at. The pages are instruction-format
+   diagrams, opcode tables and SystemVerilog listings rather than prose, and
+   760px forced most of them to scroll. The fixed chrome around the article
+   is 600px (240 rail + 2x56 page padding + 48 gap + 200 contents), so the
+   cap only binds from ~1500px up; at 1440x900 the column simply fills the
+   840px that are left, and at 1728 it settles at 900 with the slack going
+   to the right margin. Above 900 the 44px h1 starts to look small against
+   its own measure and body text passes ~120 characters a line. */
 .wa-docs-article {
   min-width: 0;
-  max-width: 760px;
+  max-width: 900px;
 }
 
 /* page header */
@@ -523,7 +558,7 @@ a { color: inherit; }
 
 /* ── footer ─────────────────────────────────────────────────── */
 .wa-docs-footer {
-  padding: 32px 64px 36px;
+  padding: 32px 56px 36px;
   border-top: 1px solid var(--rule);
   font-family: var(--mono);
   font-size: 11px;
@@ -546,9 +581,17 @@ a { color: inherit; }
 }
 
 /* ── responsive ─────────────────────────────────────────────── */
-@media (max-width: 1100px) {
+/* The narrow-desktop tier trades chrome for column: a 20px-narrower rail
+   and tighter page padding buy the article ~60px back. It used to start at
+   1100px, which was fine while the article was capped at 760px -- below
+   that the cap never bound and the tier only affected margins. With a
+   900px cap the article is space-limited all the way up to ~1500px, so the
+   trade is worth making sooner. 1280px is where the roomy desktop chrome
+   (600px of it) would otherwise squeeze the column under ~680px, which is
+   about the narrowest the wider opcode tables read at. */
+@media (max-width: 1280px) {
   .wa-docs-rail { width: 220px; }
-  .wa-docs-topbar { padding: 14px 32px; }
+  .wa-docs-topbar { padding: 8px 32px; }
   .wa-docs-content { padding: 48px 40px 64px; gap: 40px; }
   .wa-docs-h1 { font-size: 40px; }
   .wa-docs-footer { padding: 28px 40px 32px; }
@@ -564,13 +607,13 @@ a { color: inherit; }
     top: auto;
     border-right: none;
     border-bottom: 1px solid var(--rule);
-    padding: 20px 0 24px;
+    padding: 0 0 24px;
     overflow-y: visible;
   }
-  .wa-docs-rail-head { padding: 0 28px 18px; margin-bottom: 18px; }
+  .wa-docs-rail-head { padding: 0 28px; margin-bottom: 18px; }
   .wa-docs-rail-nav { padding: 8px 16px 16px 28px; }
 
-  .wa-docs-topbar { padding: 12px 28px; }
+  .wa-docs-topbar { padding: 8px 28px; }
 
   .wa-docs-content,
   .wa-docs-content.is-single-column {
@@ -616,10 +659,14 @@ a { color: inherit; }
 }
 
 @media (max-width: 560px) {
-  .wa-docs-rail-head { padding: 0 18px 16px; }
+  /* Phone viewports get a shorter header band; the rail head and the
+     topbar are stacked here, so 56px twice is a lot of chrome to scroll
+     past. 48px still clears the 20px wordmark and its badge. */
+  :root { --head-h: 48px; }
+  .wa-docs-rail-head { padding: 0 18px; }
   .wa-docs-rail-nav { padding: 8px 12px 12px 18px; }
   .wa-docs-disclosure-summary { padding: 14px 18px; }
-  .wa-docs-topbar { padding: 10px 18px; gap: 10px; }
+  .wa-docs-topbar { padding: 8px 18px; gap: 10px; }
   .wa-docs-topbar-link { font-size: 12px; }
   .wa-docs-content,
   .wa-docs-content.is-single-column { padding: 32px 18px 48px; gap: 24px; }
