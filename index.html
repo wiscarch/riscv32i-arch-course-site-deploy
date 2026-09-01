@@ -1,3 +1,7 @@
+
+
+
+
 <!doctype html>
 <html lang="en">
     <head>
@@ -8,26 +12,97 @@
 
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300..700&family=Red+Hat+Display:ital,wght@0,300..900;1,300..900&family=Red+Hat+Text:ital,wght@0,300..700;1,300..700&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Red+Hat+Display:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,500;1,600&family=Red+Hat+Mono:wght@300;400;500;600&display=swap" rel="stylesheet">
     </head>
 
     <body>
-        <h1 id="course-header">ECE 552: Introduction to Computer Architecture</h1>
-        <h2 id="course-subheader">UW-Madison Fall 2026</h2>
-        <div id="table">
-            
-            
+        <div class="wa-docs-shell">
+            <aside class="wa-docs-rail">
+                <div class="wa-docs-rail-head">
+                    <a class="wa-wordmark" href="/"><span class="wisc">ECE</span><span class="arch">552</span></a>
+                    <div class="wa-docs-rail-version">Fall 2026</div>
+                </div>
 
-            <h3 class="project-link"><a href="schedule">Project Schedule</a></h3>
+                
+                <button type="button" class="wa-docs-disclosure-summary" aria-expanded="false" aria-controls="wa-docs-rail-nav" data-disclosure>
+                    <span class="wa-docs-disclosure-label">ECE 552 Course Website</span>
+                    <span class="wa-docs-disclosure-icon" aria-hidden="true">+</span>
+                </button>
 
-            <h3 class="project-link"><a href="rules">Verilog Rules</a></h3>
+                <nav id="wa-docs-rail-nav" class="wa-docs-rail-nav" aria-label="ECE 552 Course Website" data-mobile-hidden>
+                    
+                    
+                    <a class="wa-docs-rail-link" href="/schedule/">Project Schedule</a>
+                    <a class="wa-docs-rail-link" href="/rules/">Verilog Rules</a>
+                    <a class="wa-docs-rail-link" href="/html/reference.html">Reference Materials</a>
+                </nav>
+            </aside>
 
-            <h3 class="project-link"><a href="html/reference.html">Reference Materials</a></h3>
+            <main class="wa-docs-main">
+                <div class="wa-docs-topbar">
+                    <div class="wa-docs-breadcrumb">
+                        
+                        <span class="crumb-cur">ECE 552 Course Website</span>
+                    </div>
+                    
+                </div>
+
+                <div class="wa-docs-content is-single-column">
+                    <article class="wa-docs-article">
+                        
+                        <h1 class="wa-docs-h1">ECE 552: Introduction to Computer Architecture</h1>
+                        <p class="wa-docs-page-tag">UW-Madison Fall 2026</p>
+
+                        
+<div class="wa-docs-quicklinks">
+    
+
+    <a class="wa-docs-quicklinks-row" href="/schedule/">
+        <span class="label">Project Schedule</span>
+        <span class="arrow" aria-hidden="true">&rarr;</span>
+    </a>
+
+    <a class="wa-docs-quicklinks-row" href="/rules/">
+        <span class="label">Verilog Rules</span>
+        <span class="arrow" aria-hidden="true">&rarr;</span>
+    </a>
+
+    <a class="wa-docs-quicklinks-row" href="/html/reference.html">
+        <span class="label">Reference Materials</span>
+        <span class="arrow" aria-hidden="true">&rarr;</span>
+    </a>
+</div>
+
+
+                        
+                    </article>
+
+                    
+                </div>
+
+                <footer class="wa-docs-footer">
+                    <p>2026 ECE 552 Course Staff, University of Wisconsin-Madison</p>
+                </footer>
+            </main>
         </div>
+
+        
+        <script>
+            (function () {
+                var btn = document.querySelector('[data-disclosure]');
+                var nav = document.getElementById('wa-docs-rail-nav');
+                if (!btn || !nav) return;
+                btn.addEventListener('click', function () {
+                    var hidden = nav.hasAttribute('data-mobile-hidden');
+                    if (hidden) {
+                        nav.removeAttribute('data-mobile-hidden');
+                    } else {
+                        nav.setAttribute('data-mobile-hidden', '');
+                    }
+                    btn.setAttribute('aria-expanded', hidden ? 'true' : 'false');
+                    btn.querySelector('.wa-docs-disclosure-icon').textContent = hidden ? '×' : '+';
+                });
+            })();
+        </script>
     </body>
-    <footer>
-        <p class="footer-text">
-            2026 ECE 552 Course Staff, University of Wisconsin-Madison
-        </p>
-    </footer>
 </html>

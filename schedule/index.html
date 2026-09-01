@@ -1,3 +1,7 @@
+
+
+
+
 <!doctype html>
 <html lang="en">
     <head>
@@ -8,28 +12,56 @@
 
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300..700&family=Red+Hat+Display:ital,wght@0,300..900;1,300..900&family=Red+Hat+Text:ital,wght@0,300..700;1,300..700&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Red+Hat+Display:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,500;1,600&family=Red+Hat+Mono:wght@300;400;500;600&display=swap" rel="stylesheet">
     </head>
 
-    <body class="project">
-        
-        <h1 class="project-header">Project Schedule</h1>
-        <h2 class="project-subheader">UW—Madison ECE 552: Fall 2026</h2>
-        <p class="back-link"><a href="/">Back to Course Home</a></p>
+    <body>
+        <div class="wa-docs-shell">
+            <aside class="wa-docs-rail">
+                <div class="wa-docs-rail-head">
+                    <a class="wa-wordmark" href="/"><span class="wisc">ECE</span><span class="arch">552</span></a>
+                    <div class="wa-docs-rail-version">Fall 2026</div>
+                </div>
 
-        <div class="table-of-contents">
-        <h3 class="table-of-contents-header">Table of Contents</h3>
-            <ul class="table-of-contents-list">
                 
-                
-                <li class="table-of-contents-item"><a href="#release-and-due-dates">Release and Due Dates</a></li>
-                
-                
-            </ul>
-        </div>
+                <button type="button" class="wa-docs-disclosure-summary" aria-expanded="false" aria-controls="wa-docs-rail-nav" data-disclosure>
+                    <span class="wa-docs-disclosure-label">Project Schedule</span>
+                    <span class="wa-docs-disclosure-icon" aria-hidden="true">+</span>
+                </button>
 
-        <div class="instructions-box">
-<h3 id="release-and-due-dates" tabindex="-1">Release and Due Dates</h3>
+                <nav id="wa-docs-rail-nav" class="wa-docs-rail-nav" aria-label="Project Schedule" data-mobile-hidden>
+                    
+                    
+                    <a class="wa-docs-rail-link is-active" href="/schedule/">Project Schedule</a>
+                    <a class="wa-docs-rail-link" href="/rules/">Verilog Rules</a>
+                    <a class="wa-docs-rail-link" href="/html/reference.html">Reference Materials</a>
+                </nav>
+            </aside>
+
+            <main class="wa-docs-main">
+                <div class="wa-docs-topbar">
+                    <div class="wa-docs-breadcrumb">
+                        
+                        <span class="crumb-mono">ECE 552</span>
+                        <span class="crumb-sep" aria-hidden="true">/</span>
+                        
+                        <span class="crumb-cur">Project Schedule</span>
+                    </div>
+                    
+                    <div class="wa-docs-topbar-right">
+                        <a class="wa-docs-topbar-link" href="/">Back to Course Home</a>
+                    </div>
+                    
+                </div>
+
+                <div class="wa-docs-content">
+                    <article class="wa-docs-article">
+                        
+                        <h1 class="wa-docs-h1">Project Schedule</h1>
+                        <p class="wa-docs-page-tag">UW—Madison ECE 552: Fall 2026</p>
+
+                        <div class="instructions-box">
+<h2 id="release-and-due-dates" tabindex="-1">Release and Due Dates</h2>
 <p>Projects 4 &amp; 5 are released together, and projects 6 &amp; 7 are released together. Project 8 is optional extra credit. All dates are for Fall 2026; see Gradescope for the exact submission deadline time on each assignment.</p>
 <div class="table-scroll"><table>
 <thead>
@@ -84,5 +116,47 @@
 </table>
 </div></div>
 
+
+                        
+                    </article>
+
+                    
+                    <nav class="wa-docs-toc" aria-label="Table of Contents">
+                        <div class="h">Table of Contents</div>
+                        <ul class="wa-docs-toc-list">
+                            
+                            
+                            <li><a href="#release-and-due-dates">Release and Due Dates</a></li>
+                            
+                            
+                        </ul>
+                    </nav>
+                    
+                </div>
+
+                <footer class="wa-docs-footer">
+                    <p>2026 ECE 552 Course Staff, University of Wisconsin-Madison</p>
+                </footer>
+            </main>
+        </div>
+
+        
+        <script>
+            (function () {
+                var btn = document.querySelector('[data-disclosure]');
+                var nav = document.getElementById('wa-docs-rail-nav');
+                if (!btn || !nav) return;
+                btn.addEventListener('click', function () {
+                    var hidden = nav.hasAttribute('data-mobile-hidden');
+                    if (hidden) {
+                        nav.removeAttribute('data-mobile-hidden');
+                    } else {
+                        nav.setAttribute('data-mobile-hidden', '');
+                    }
+                    btn.setAttribute('aria-expanded', hidden ? 'true' : 'false');
+                    btn.querySelector('.wa-docs-disclosure-icon').textContent = hidden ? '×' : '+';
+                });
+            })();
+        </script>
     </body>
 </html>
