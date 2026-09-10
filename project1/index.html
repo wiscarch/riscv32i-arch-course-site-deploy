@@ -1,0 +1,285 @@
+
+
+
+
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Project 1: RISC-V Assembly Language</title>
+        <link rel="stylesheet" href="/styles/site.css">
+
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Red+Hat+Display:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,500;1,600&family=Red+Hat+Mono:wght@300;400;500;600&display=swap" rel="stylesheet">
+    </head>
+
+    <body>
+        <div class="wa-docs-shell">
+            <aside class="wa-docs-rail">
+                
+                <div class="wa-docs-rail-head">
+                    <a class="wa-wordmark" href="/"><span class="wisc">ECE</span><span class="arch">552</span></a>
+                    <span class="wa-docs-rail-version">Fall 2026</span>
+                </div>
+
+                
+                <button type="button" class="wa-docs-disclosure-summary" aria-expanded="false" aria-controls="wa-docs-rail-nav" data-disclosure>
+                    <span class="wa-docs-disclosure-label">Project 1: RISC-V Assembly Language</span>
+                    <span class="wa-docs-disclosure-icon" aria-hidden="true">+</span>
+                </button>
+
+                <nav id="wa-docs-rail-nav" class="wa-docs-rail-nav" aria-label="Project 1: RISC-V Assembly Language" data-mobile-hidden>
+                    
+                    
+                    <a class="wa-docs-rail-link is-active" href="/project1/">Project 1: RISC-V Assembly Language</a>
+                    
+                    <a class="wa-docs-rail-link" href="/schedule/">Project Schedule</a>
+                    <a class="wa-docs-rail-link" href="/rules/">Verilog Rules</a>
+                    <a class="wa-docs-rail-link" href="/html/reference.html">Reference Materials</a>
+                </nav>
+            </aside>
+
+            <main class="wa-docs-main">
+                <div class="wa-docs-topbar">
+                    <div class="wa-docs-breadcrumb">
+                        
+                        <span class="crumb-mono">ECE 552</span>
+                        <span class="crumb-sep" aria-hidden="true">/</span>
+                        
+                        <span class="crumb-cur">Project 1: RISC-V Assembly Language</span>
+                    </div>
+                    
+                    <div class="wa-docs-topbar-right">
+                        <a class="wa-docs-topbar-link" href="/">Back to Course Home</a>
+                    </div>
+                    
+                </div>
+
+                <div class="wa-docs-content">
+                    <article class="wa-docs-article">
+                        
+                        <h1 class="wa-docs-h1">Project 1: RISC-V Assembly Language</h1>
+                        <p class="wa-docs-page-tag">UW—Madison ECE 552: Fall 2026</p>
+
+                        <div class="instructions-box">
+<h2 id="project-introduction" tabindex="-1">Project Introduction</h2>
+<p>In this project phase, you will refresh your memory on assembly programming and gain exposure to the 32-bit RISC-V (RV32I) instruction set architecture (ISA) used throughout this course. You are expected to have prior experience writing and debugging C and assembly languages at the level of ECE/CS 354 and to have familiarity with digital logic at the level of ECE/CS 252 for this assignment.</p>
+<p>Solve each coding problem in the specified language and answer the free-response questions associated with each problem (provided near the end of this document). This assignment should be completed by yourself. You may discuss the problems with other students but must work on your own answers.</p>
+<p>Generative artificial intelligence (e.g. ChatGPT) is permitted for this assignment.</p>
+<p>You are encouraged to use the Internet to answer the free response questions provided, but please do not share answers online.</p>
+<p>This project will be worth 2.5% of your final course grade. All material is available in the <a href="https://github.com/wiscarch/riscv32i-arch-course-starter-fa26/tree/main/project1">Project 1 Repository</a> on GitHub. You can clone the repository locally or in a CSL machine. If you choose to use a local machine, you can either install the required packages or use the Docker image provided.</p>
+<p>The Docker image can be obtained by running the following commands:</p>
+<pre class="shiki everforest-light" style="background-color:#efece4;color:#5c6a72" tabindex="0"><code><span class="line"><span style="color:#8DA101">$</span><span style="color:#DFA000"> cd</span><span style="color:#DFA000"> path/to/project1/code</span><span style="color:#939F91;font-style:italic"> # replace with the actual path to the project1 folder</span></span>
+<span class="line"><span style="color:#8DA101">$</span><span style="color:#DFA000"> docker</span><span style="color:#DFA000"> run</span><span style="color:#DFA000"> --rm</span><span style="color:#DFA000"> -v</span><span style="color:#5C6A72"> $(</span><span style="color:#DFA000">pwd</span><span style="color:#5C6A72">)</span><span style="color:#DFA000">:/project1</span><span style="color:#DFA000"> -it</span><span style="color:#DFA000"> coderkalyan/ece552-tools:latest</span><span style="color:#DFA000"> bash</span></span>
+<span class="line"></span></code></pre>
+<p>If there are any issues with Gradescope or the files provided, please post on Piazza rather than emailing. If you are having difficulty with this project, office hours are held several times a week where assistance is available.</p>
+</div>
+<div class="instructions-box">
+<h2 id="problem-1-unsigned-multiplication-in-rv32i-assembly" tabindex="-1">Problem 1: Unsigned Multiplication in RV32I Assembly</h2>
+<p>Using the RISC-V RV32I ISA reference sheet provided in class and on the <a href="../html/reference.html">Reference Materials</a> page, write an assembly routine to perform multiplication between two unsigned 32-bit numbers and output the lower 32 least significant bits of the product as a 32-bit unsigned result.</p>
+<p>You are not allowed to use any of the RISC-V multiplication instructions (mul[h][s][u]), which are not present in RV32I and not described in the reference sheet. You may use any of the instructions that do appear in the reference sheet (e.g. <code>add</code>). Do not use any pseudo-instructions such as <code>mv</code> or <code>ret</code>. There is no maximum number of instructions you may use, but you are strongly encouraged to write the most compact (and fast) implementation you can.</p>
+<p>Note: your implementation should not be linear in complexity with respect to the actual numbers provided. Therefore, an implementation that multiplies <code>a × b</code> by adding <code>a</code> to itself <code>b</code> times is not acceptable, as it is much too slow.</p>
+<p>Use the provided starter code under <code>project1/umul.s</code> in the <a href="https://github.com/wiscarch/riscv32i-arch-course-starter-fa26/tree/main/project1">Project 1 repository</a> on GitHub as your starting point. You can clone the repository and edit <code>umul.s</code> locally – the other files in the repository are for building and grading, and need not be modified.</p>
+<p>You can debug your code using a simulator such as <a href="https://venus.kvakil.me/">Venus</a>. Use “step” to execute assembly code one line at a time, or use “run” to run all lines of code at once. Some simulators use breakpoints to allow for more flexibility in debugging.</p>
+<p>If you would like to test your code, you may do so locally, or on a CSL machine. First, make sure that you have cloned the <a href="https://github.com/wiscarch/riscv32i-arch-course-starter-fa26/tree/main/project1">Project 1 repository</a> from GitHub in whichever environment you will be testing in. Use the provided Makefile to build and run the tests.</p>
+<pre class="shiki everforest-light" style="background-color:#efece4;color:#5c6a72" tabindex="0"><code><span class="line"><span style="color:#8DA101">$</span><span style="color:#DFA000"> make</span><span style="color:#DFA000"> test-umul</span></span>
+<span class="line"></span></code></pre>
+<p>After cloning, if you are using a local machine, you can either install the required packages locally or use the Docker image provided. You can also use a CSL machine which should have the required packages. The commands necessary for using the Docker image are provided below:</p>
+<pre class="shiki everforest-light" style="background-color:#efece4;color:#5c6a72" tabindex="0"><code><span class="line"><span style="color:#8DA101">$</span><span style="color:#DFA000"> cd</span><span style="color:#DFA000"> path/to/project1/code</span><span style="color:#939F91;font-style:italic"> # replace with the actual path to the project1 folder</span></span>
+<span class="line"><span style="color:#8DA101">$</span><span style="color:#DFA000"> docker</span><span style="color:#DFA000"> run</span><span style="color:#DFA000"> --rm</span><span style="color:#DFA000"> -v</span><span style="color:#5C6A72"> $(</span><span style="color:#DFA000">pwd</span><span style="color:#5C6A72">)</span><span style="color:#DFA000">:/project1</span><span style="color:#DFA000"> -it</span><span style="color:#DFA000"> coderkalyan/ece552-tools:latest</span><span style="color:#DFA000"> bash</span></span>
+<span class="line"><span style="color:#8DA101">root@530481afd799:/#</span><span style="color:#DFA000"> cd</span><span style="color:#DFA000"> /project1</span></span>
+<span class="line"><span style="color:#8DA101">root@530481afd799:/project1</span><span style="color:#DFA000"> make</span><span style="color:#DFA000"> test-umul</span></span>
+<span class="line"></span></code></pre>
+<p>Answer the free response questions related to this problem (near the bottom of this page) in <code>project1.txt</code>.</p>
+</div>
+<div class="instructions-box">
+<h2 id="problem-2-dot-product-in-c" tabindex="-1">Problem 2: Dot Product in C</h2>
+<p>Write C code for a function that takes in two arrays as inputs and returns their dot product as an integer. That is, given two input arrays <code>A[N]</code> and <code>B[N]</code>, the program should compute <code>output = sum(A[i] * B[i])</code> for <code>i</code> in <code>[0, N)</code>. Your code should utilize the multiply routine you developed in problem 1; this can be achieved by calling the extern function provided in the starter code.</p>
+<p>See the starter code below. This code is also provided in the <a href="https://github.com/wiscarch/riscv32i-arch-course-starter-fa26/tree/main/project1">Project 1 repository</a> on GitHub.</p>
+<pre class="shiki everforest-light" style="background-color:#efece4;color:#5c6a72" tabindex="0"><code><span class="line"><span style="color:#F85552">#include</span><span style="color:#DFA000"> &#x3C;inttypes.h></span></span>
+<span class="line"><span style="color:#F85552">#include</span><span style="color:#DFA000"> &#x3C;stdio.h></span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F57D26">extern</span><span style="color:#3A94C5"> uint32_t</span><span style="color:#8DA101"> umul</span><span style="color:#5C6A72">(</span><span style="color:#F57D26">const</span><span style="color:#3A94C5"> uint32_t</span><span style="color:#5C6A72"> x, </span><span style="color:#F57D26">const</span><span style="color:#3A94C5"> uint32_t</span><span style="color:#5C6A72"> y);</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#939F91;font-style:italic">// Performs a vector dot product between the 32 bit unsigned integer</span></span>
+<span class="line"><span style="color:#939F91;font-style:italic">// arrays A and B of length len. The arrays are guaranteed to be the</span></span>
+<span class="line"><span style="color:#939F91;font-style:italic">// same length (len items).</span></span>
+<span class="line"><span style="color:#3A94C5">uint32_t</span><span style="color:#8DA101"> dot</span><span style="color:#5C6A72">(</span><span style="color:#F57D26">const</span><span style="color:#3A94C5"> uint32_t</span><span style="color:#F57D26"> *const</span><span style="color:#5C6A72"> A, </span><span style="color:#F57D26">const</span><span style="color:#3A94C5"> uint32_t</span><span style="color:#F57D26"> *const</span><span style="color:#5C6A72"> B, </span><span style="color:#F57D26">const</span><span style="color:#3A94C5"> size_t</span><span style="color:#5C6A72"> len)</span></span>
+<span class="line"><span style="color:#5C6A72">{</span></span>
+<span class="line"><span style="color:#939F91;font-style:italic">    // Replace with your implementation of dot product.</span></span>
+<span class="line"><span style="color:#F85552">    return</span><span style="color:#DF69BA"> 0</span><span style="color:#5C6A72">;</span></span>
+<span class="line"><span style="color:#5C6A72">}</span></span>
+<span class="line"></span></code></pre>
+<p>The compiler toolchain in the Docker image provided is also capable of compiling and linking this C program with your previous assembly. Again, you can use a CSL machine or install the packages locally if you prefer. Try building and running the tests:</p>
+<pre class="shiki everforest-light" style="background-color:#efece4;color:#5c6a72" tabindex="0"><code><span class="line"><span style="color:#8DA101">$</span><span style="color:#DFA000"> make</span><span style="color:#DFA000"> test-dot</span></span>
+<span class="line"></span></code></pre>
+<p>The steps to use the Docker image are the same as the previous problem:</p>
+<pre class="shiki everforest-light" style="background-color:#efece4;color:#5c6a72" tabindex="0"><code><span class="line"><span style="color:#8DA101">$</span><span style="color:#DFA000"> cd</span><span style="color:#DFA000"> path/to/project1/code</span><span style="color:#939F91;font-style:italic"> # replace with the actual path to the project1 folder</span></span>
+<span class="line"><span style="color:#8DA101">$</span><span style="color:#DFA000"> docker</span><span style="color:#DFA000"> run</span><span style="color:#DFA000"> --rm</span><span style="color:#DFA000"> -v</span><span style="color:#5C6A72"> $(</span><span style="color:#DFA000">pwd</span><span style="color:#5C6A72">)</span><span style="color:#DFA000">:/project1</span><span style="color:#DFA000"> -it</span><span style="color:#DFA000"> coderkalyan/ece552-tools:latest</span><span style="color:#DFA000"> bash</span></span>
+<span class="line"><span style="color:#8DA101">root@530481afd799:/#</span><span style="color:#DFA000"> cd</span><span style="color:#DFA000"> /project1</span></span>
+<span class="line"><span style="color:#8DA101">root@530481afd799:/project1</span><span style="color:#DFA000"> make</span><span style="color:#DFA000"> test-dot</span></span>
+<span class="line"></span></code></pre>
+<p>Answer the free response questions related to this problem (near the bottom of this page) in <code>project1.txt</code>.</p>
+</div>
+<div class="instructions-box">
+<h2 id="problem-3-mystery-assembly-program" tabindex="-1">Problem 3: Mystery Assembly Program</h2>
+<p>Read the following mystery routine implemented in RISC-V assembly and answer the following questions about what it does.</p>
+<p>Try stepping through this code using a simulator such as <a href="https://venus.kvakil.me/">Venus</a> and passing in function arguments using register <code>a0</code> (per the standard RISC-V calling convention) to store the first function argument and obtain the return value. The register <code>ra</code> is used for the return address.</p>
+<p>The code is also available under <code>project1/mystery.s</code> on the git repo – if you want, you can compile it and try running it on different values. While the process is the same, no make target is provided for mystery; look at the file and run <code>gcc</code> appropriately inside the Docker image.</p>
+<pre class="shiki everforest-light" style="background-color:#efece4;color:#5c6a72" tabindex="0"><code><span class="line"><span style="color:#8DA101">main</span><span style="color:#5C6A72">:</span></span>
+<span class="line"><span style="color:#5C6A72">    addi t5, zero, </span><span style="color:#DF69BA">8</span></span>
+<span class="line"><span style="color:#5C6A72">    slli t5, t5, </span><span style="color:#DF69BA">2</span></span>
+<span class="line"><span style="color:#F57D26">    sub</span><span style="color:#5C6A72">  t0, a0, t5</span></span>
+<span class="line"><span style="color:#5C6A72">    slli t1, t0, </span><span style="color:#DF69BA">2</span></span>
+<span class="line"><span style="color:#F57D26">    add</span><span style="color:#5C6A72">  t1, t1, t0</span></span>
+<span class="line"><span style="color:#5C6A72">    addi t2, zero, </span><span style="color:#DF69BA">0</span></span>
+<span class="line"><span style="color:#5C6A72">    addi t3, t1, </span><span style="color:#DF69BA">0</span></span>
+<span class="line"><span style="color:#5C6A72">    addi t4, zero, </span><span style="color:#DF69BA">9</span></span>
+<span class="line"><span style="color:#F57D26">loop</span><span style="color:#5C6A72">:</span></span>
+<span class="line"><span style="color:#5C6A72">    blt  t3, t4, done</span></span>
+<span class="line"><span style="color:#F57D26">    sub</span><span style="color:#5C6A72">  t3, t3, t4</span></span>
+<span class="line"><span style="color:#5C6A72">    addi t2, t2, </span><span style="color:#DF69BA">1</span></span>
+<span class="line"><span style="color:#5C6A72">    beq  zero, zero, </span><span style="color:#F57D26">loop</span></span>
+<span class="line"><span style="color:#8DA101">done</span><span style="color:#5C6A72">:</span></span>
+<span class="line"><span style="color:#5C6A72">    addi a0, t2, </span><span style="color:#DF69BA">0</span></span>
+<span class="line"><span style="color:#5C6A72">    jalr zero, </span><span style="color:#DF69BA">0</span><span style="color:#5C6A72">(ra)</span></span>
+<span class="line"></span></code></pre>
+<p>Answer the free response questions related to this problem (near the bottom of this page) in <code>project1.txt</code>.</p>
+</div>
+<div class="instructions-box">
+<h2 id="free-response-questions" tabindex="-1">Free Response Questions</h2>
+<p>Answer the following free-response questions in a text file named <code>project1.txt</code>. Use the template below to format your answers. Replace <code>your_name</code> with your actual name and replace <code>answers[0]</code>, <code>answers[1]</code>, ..., <code>answers[N]</code> with your actual answers to each question.</p>
+<p><strong>Submission Template</strong></p>
+<pre class="shiki everforest-light" style="background-color:#efece4;color:#5c6a72" tabindex="0"><code><span class="line"><span>Author: your_name</span></span>
+<span class="line"><span>[Q0]: answers[0]</span></span>
+<span class="line"><span>[Q1]: answers[1]</span></span>
+<span class="line"><span>...</span></span>
+<span class="line"><span>[QN]: answers[N]</span></span>
+<span class="line"><span></span></span></code></pre>
+<h3 id="problem-1" tabindex="-1">Problem 1</h3>
+<p><strong>[Q0] Reflect:</strong> Is the result in <code>a0</code> always the correct and complete product of the two 32-bit input numbers? Why or why not?</p>
+<p><strong>[Q1] Think:</strong> Can you think of any other arithmetic operations not listed on the reference sheet (on the <a href="../html/reference.html">Reference Materials</a> page) that could be implemented using RISC-V assembly code? Multiplication and division are not allowed as answers.</p>
+<p><strong>[Q2] Think:</strong> Multiplication can also be implemented in hardware by creating a <code>mul</code> instruction. What might be the benefits and costs of introducing a hardware multiplication instruction? Describe at least one benefit and one cost/downside.</p>
+<p><strong>[Q3] Research:</strong> Recall the IA-32 (32-bit x86) assembly language you learned in ECE 354 (<a href="https://en.wikipedia.org/wiki/IA-32">Wikipedia</a>). Describe 3 differences between RV32I and IA-32. Do not simply list terminology (like CISC or RISC) without describing what it means or providing an example.</p>
+<h3 id="problem-2" tabindex="-1">Problem 2</h3>
+<p><strong>[Q4] Think:</strong> Provide a brief description of the differences between a high-level language such as C and a low-level language such as RISC-V. In what situations would you use one or the other?</p>
+<p><strong>[Q5] Research:</strong> What software components allow the C code you write to be realized as machine instructions that can be executed by a processor? How might their design impact overall performance?</p>
+<p><strong>[Q6] Research:</strong> Adding a hardware multiplication instruction would improve performance for certain programs that utilize this heavily, such as dot product. What would be the effects, if any, of adding this optimization to a CPU on other programs that do not require multiplication as extensively?</p>
+<h3 id="problem-3" tabindex="-1">Problem 3</h3>
+<p><strong>[Q7] Reflect:</strong> What is this program doing (be specific as to the equation this implements)?</p>
+<p><strong>[Q8] Think:</strong> Explain how you would modify this assembly code to produce the opposite effect.</p>
+<p><strong>[Q9] Research:</strong> A simple arithmetic program such as this can still run faster by means of hardware improvement. Name one hardware improvement you could make that would make this particular program run faster.</p>
+</div>
+<div class="instructions-box">
+<h2 id="submission-instructions" tabindex="-1">Submission Instructions</h2>
+<p>Submit the following files to the appropriate Gradescope assignment:</p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Filename</th>
+<th>Points</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>umul.s</code></td>
+<td>10</td>
+<td>Autograded. See problem 1.</td>
+</tr>
+<tr>
+<td><code>dot.c</code></td>
+<td>10</td>
+<td>Autograded. See problem 2.</td>
+</tr>
+<tr>
+<td><code>project1.txt</code></td>
+<td>20</td>
+<td>Graded manually, after the deadline. See template above.</td>
+</tr>
+</tbody>
+</table>
+</div><p>Filenames must match exactly. Please double check to ensure that you have submitted all of the required files. When submitting, make sure to upload all files in a flat hierarchy without any folders (either just the files, or zipped together in a zip file is fine).</p>
+<p><strong>Note:</strong> Gradescope will only show your score for <code>umul.s</code>/<code>dot.c</code> (out of 20) immediately after submitting -- <code>project1.txt</code>'s 20 points aren't reflected until it's graded manually.</p>
+<p>This project will be worth 2.5% of your final course grade. The results of any manually graded content will be made available after the deadline.</p>
+</div>
+
+
+                        
+                    </article>
+
+                    
+                    <nav class="wa-docs-toc" aria-label="Table of Contents">
+                        <div class="h">Table of Contents</div>
+                        <ul class="wa-docs-toc-list">
+                            
+                            
+                            <li><a href="#project-introduction">Project Introduction</a></li>
+                            
+                            
+                            
+                            <li><a href="#problem-1-unsigned-multiplication-in-rv32i-assembly">Problem 1: Unsigned Multiplication in RV32I Assembly</a></li>
+                            
+                            
+                            
+                            <li><a href="#problem-2-dot-product-in-c">Problem 2: Dot Product in C</a></li>
+                            
+                            
+                            
+                            <li><a href="#problem-3-mystery-assembly-program">Problem 3: Mystery Assembly Program</a></li>
+                            
+                            
+                            
+                            <li>
+                                <details>
+                                    <summary><a href="#free-response-questions">Free Response Questions</a></summary>
+                                    <ul class="wa-docs-toc-sublist">
+                                    
+                                        <li><a href="#problem-1">Problem 1</a></li>
+                                    
+                                        <li><a href="#problem-2">Problem 2</a></li>
+                                    
+                                        <li><a href="#problem-3">Problem 3</a></li>
+                                    
+                                    </ul>
+                                </details>
+                            </li>
+                            
+                            
+                            
+                            <li><a href="#submission-instructions">Submission Instructions</a></li>
+                            
+                            
+                        </ul>
+                    </nav>
+                    
+                </div>
+
+                <footer class="wa-docs-footer">
+                    <p>2026 ECE 552 Course Staff, University of Wisconsin-Madison</p>
+                </footer>
+            </main>
+        </div>
+
+        
+        <script>
+            (function () {
+                var btn = document.querySelector('[data-disclosure]');
+                var nav = document.getElementById('wa-docs-rail-nav');
+                if (!btn || !nav) return;
+                btn.addEventListener('click', function () {
+                    var hidden = nav.hasAttribute('data-mobile-hidden');
+                    if (hidden) {
+                        nav.removeAttribute('data-mobile-hidden');
+                    } else {
+                        nav.setAttribute('data-mobile-hidden', '');
+                    }
+                    btn.setAttribute('aria-expanded', hidden ? 'true' : 'false');
+                    btn.querySelector('.wa-docs-disclosure-icon').textContent = hidden ? '×' : '+';
+                });
+            })();
+        </script>
+    </body>
+</html>
