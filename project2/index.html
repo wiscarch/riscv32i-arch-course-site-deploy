@@ -1,0 +1,319 @@
+
+
+
+
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Project 2: Digital Design and Debugging</title>
+        <link rel="stylesheet" href="/styles/site.css">
+
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Red+Hat+Display:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,500;1,600&family=Red+Hat+Mono:wght@300;400;500;600&display=swap" rel="stylesheet">
+    </head>
+
+    <body>
+        <div class="wa-docs-shell">
+            <aside class="wa-docs-rail">
+                
+                <div class="wa-docs-rail-head">
+                    <a class="wa-wordmark" href="/"><span class="wisc">ECE</span><span class="arch">552</span></a>
+                    <span class="wa-docs-rail-version">Fall 2026</span>
+                </div>
+
+                
+                <button type="button" class="wa-docs-disclosure-summary" aria-expanded="false" aria-controls="wa-docs-rail-nav" data-disclosure>
+                    <span class="wa-docs-disclosure-label">Project 2: Digital Design and Debugging</span>
+                    <span class="wa-docs-disclosure-icon" aria-hidden="true">+</span>
+                </button>
+
+                <nav id="wa-docs-rail-nav" class="wa-docs-rail-nav" aria-label="Project 2: Digital Design and Debugging" data-mobile-hidden>
+                    
+                    
+                    <a class="wa-docs-rail-link" href="/project1/">Project 1: RISC-V Assembly Language</a>
+                    
+                    <a class="wa-docs-rail-link is-active" href="/project2/">Project 2: Digital Design and Debugging</a>
+                    
+                    <a class="wa-docs-rail-link" href="/schedule/">Project Schedule</a>
+                    <a class="wa-docs-rail-link" href="/rules/">Verilog Rules</a>
+                    <a class="wa-docs-rail-link" href="/html/reference.html">Reference Materials</a>
+                </nav>
+            </aside>
+
+            <main class="wa-docs-main">
+                <div class="wa-docs-topbar">
+                    <div class="wa-docs-breadcrumb">
+                        
+                        <span class="crumb-mono">ECE 552</span>
+                        <span class="crumb-sep" aria-hidden="true">/</span>
+                        
+                        <span class="crumb-cur">Project 2: Digital Design and Debugging</span>
+                    </div>
+                    
+                    <div class="wa-docs-topbar-right">
+                        <a class="wa-docs-topbar-link" href="/">Back to Course Home</a>
+                    </div>
+                    
+                </div>
+
+                <div class="wa-docs-content">
+                    <article class="wa-docs-article">
+                        
+                        <h1 class="wa-docs-h1">Project 2: Digital Design and Debugging</h1>
+                        <p class="wa-docs-page-tag">UW—Madison ECE 552: Fall 2026</p>
+
+                        <div class="instructions-box">
+<h2 id="project-introduction" tabindex="-1">Project Introduction</h2>
+<p>In this project phase, you will refresh your SRAM cells on digital design. You are expected to have prior experience writing and debugging digital systems at the level of ECE/CS 352 for this assignment. Having taken ECE 551 will be an advantage, but keep in mind that you are not allowed to use SystemVerilog.</p>
+<p>Solve each digital design problem in Verilog and answer the free-response questions associated with each problem. This assignment should be completed by yourself. You may discuss the problems with other students but must work on your own answers.</p>
+<p>Generative artificial intelligence (e.g. ChatGPT) is permitted for this assignment.</p>
+<p>You are encouraged to use the Internet to answer the free response questions provided, but please do not share answers online.</p>
+<p>This project will be worth 2.5% of your final course grade. All material is available in the <a href="https://github.com/wiscarch/riscv32i-arch-course-starter-fa26/tree/main/project2">Project 2 repository</a> on GitHub. You can clone the repository locally or in a CSL machine.</p>
+<p>This project will have an autograded coding component, and some free response questions like in Project 1. Please keep in mind that the autograder on Gradescope is meant for validating submissions, and not for debugging directly. You are encouraged to create and run testbenches for your modules locally, and use Gradescope just as a checkpoint. The final submission before the deadline is the only one that will be used when grading, so please make sure that you have submitted all files.</p>
+<p>If there are any issues with Gradescope or the files provided, please post on Piazza rather than emailing. If you are having difficulty with this project, office hours are held several times a week where assistance is available.</p>
+</div>
+<div class="instructions-box">
+<h2 id="note-on-coding-style-and-project-management" tabindex="-1">Note on Coding Style and Project Management</h2>
+<p>If you need more practice with Verilog, this <a href="https://hdlbits.01xz.net/wiki/Main_Page">verilog practice site</a> may be useful.</p>
+<p>This homework is meant to be a crash course for the style of Verilog you will be using in the upcoming project phases. Don't be discouraged if you find this assignment to be difficult at first; the level of coding skill required in the rest of the course does not increase.</p>
+<p>What will increase, however, is the level at which you must understand the topics relating to computer architecture, and the level at which you are able to design and reason about complex digital systems.</p>
+<p>This course will have a large project with a substantial codebase; staying organized from the beginning is much easier than trying to organize spaghetti code. Manage abstraction carefully; each functional unit should be defined with a clear interface. If something is used more than once, consider defining it as a submodule and instantiating multiple copies. Divide larger problems into smaller problems. Creating testbenches for each functional unit is advisable but not required.</p>
+<p>You may complete each of your solutions in the associated starter files, or, if you would like to you may divide each module into submodules and instantiate them in the starter files. Please do not modify the top-level interfaces (input and output signals near the top) provided in <code>rf.v</code>, <code>imm.v</code> and <code>alu.v</code> - the grader will not work correctly. When submitting, make sure to upload all Verilog files in a flat hierarchy without any folders (either just the files, or zipped together in a zip file is fine).</p>
+<p>Submissions using SystemVerilog (<code>.sv</code> file extension) will not be accepted (you will receive 0 pts for any file submitted using SystemVerilog). Starting with this project, the <a href="../rules">Verilog Rules</a> checker is enforced on your submission to ensure designs are synthesizable (synthesis is not a major focus of this class, but writing synthesizable code is important) -- see that page for the specific restrictions (e.g. no <code>*</code>/<code>/</code>/<code>%</code> operators, no <code>$signed()</code>/<code>$unsigned()</code>, no procedural loops outside <code>generate</code>/<code>genvar</code>). If a submission fails this check, none of its RTL sub-tests can run; fix the reported issue and resubmit. You can run the exact same checker locally before submitting -- <code>ece552 validate -w *.v</code> -- see the starter repository's <code>python-ece552/README.md</code> for setup; this lets you catch a violation before using up a Gradescope submission.</p>
+<p>In a future project phase, you will be asked to create a block diagram to represent the data and control paths of a full processor. Consider practicing by creating block diagrams for some of these problems. Sample black box diagrams are included below to get you thinking.</p>
+<p>Please also begin searching for project partners for the group project phases. You will only use one of your group members' code for subsequent phases, but everyone must complete this assignment.</p>
+</div>
+<div class="instructions-box">
+<h2 id="problem-1-debugging-an-immediate-generator" tabindex="-1">Problem 1: Debugging an Immediate Generator</h2>
+<p>RV32I has multiple different immediate formats that specify different ways to store immediate values in different instructions. In this problem, you will debug a provided immediate decoder to decode these bits depending on the opcode and assemble a 32-bit immediate value. You can find the encodings for each of these formats in the reference card provided on the <a href="../html/reference.html">Reference Materials</a> page of the course website.</p>
+<p>For your convenience, the table is also listed here.</p>
+<p><img src="../images/immediate_formats.png" alt="Immediate Formats"></p>
+<p>Use the provided <code>imm.v</code> interface in the <a href="https://github.com/wiscarch/riscv32i-arch-course-starter-fa26/tree/main/project2">Project 2 repository</a> on GitHub as a starting point. Several bugs have been added to the file that must be identified and fixed.</p>
+<p>You can use any simulator that you would like; Icarus will be used for grading, but Modelsim or another is also acceptable. To simulate in Modelsim, use the following steps:</p>
+<ol>
+<li>Create a new project and add <code>imm.v</code>.</li>
+<li>Create a new testbench file <code>imm_tb.v</code> (the testbenches used for grading this project are not provided, but will be in subsequent phases) and add it to the project. You will want to apply a stimulus (for example, a sample RISCV-32I instruction) and check for the immediate value output to verify that your immediate generator is working correctly.</li>
+<li>Compile all files.</li>
+<li>Run the testbench <code>imm_tb</code> using Simulate-&gt;Run-&gt;Run All.</li>
+<li>Open the waveform viewer to observe the signals (add signals by right-clicking and selecting &quot;Add Wave&quot;).</li>
+</ol>
+<p>Answer the free response questions related to this problem (near the bottom of this page) in <code>project2.txt</code>.</p>
+</div>
+<div class="instructions-box">
+<h2 id="problem-2-register-file" tabindex="-1">Problem 2: Register File</h2>
+<p>The general-purpose registers in a CPU are typically organized into a unit called a register file. The register file acts as a very small, very high-speed memory (like an SRAM) that can read and write data values each cycle to store temporary data in your program.</p>
+<pre class="shiki everforest-light" style="background-color:#efece4;color:#5c6a72" tabindex="0"><code><span class="line"><span style="color:#35A77C">`</span><span style="color:#DFA000">default_nettype</span><span style="color:#5C6A72"> none</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F85552">module</span><span style="color:#35A77C"> rf</span><span style="color:#F57D26"> #</span><span style="color:#5C6A72">(</span></span>
+<span class="line"><span style="color:#3A94C5">    parameter</span><span style="color:#5C6A72"> BYPASS_EN </span><span style="color:#F57D26">=</span><span style="color:#DF69BA"> 0</span><span style="color:#939F91;font-style:italic"> // change to 1 to enable register file bypass</span></span>
+<span class="line"><span style="color:#5C6A72">) (</span></span>
+<span class="line"><span style="color:#3A94C5">    input</span><span style="color:#3A94C5">  wire</span><span style="color:#5C6A72">        i_clk,</span></span>
+<span class="line"><span style="color:#3A94C5">    input</span><span style="color:#3A94C5">  wire</span><span style="color:#5C6A72">        i_rst,</span></span>
+<span class="line"><span style="color:#3A94C5">    input</span><span style="color:#3A94C5">  wire</span><span style="color:#5C6A72"> [ </span><span style="color:#DF69BA">4</span><span style="color:#F57D26">:</span><span style="color:#DF69BA">0</span><span style="color:#5C6A72">] i_rs1_raddr,</span></span>
+<span class="line"><span style="color:#3A94C5">    output</span><span style="color:#3A94C5"> wire</span><span style="color:#5C6A72"> [</span><span style="color:#DF69BA">31</span><span style="color:#F57D26">:</span><span style="color:#DF69BA">0</span><span style="color:#5C6A72">] o_rs1_rdata,</span></span>
+<span class="line"><span style="color:#3A94C5">    input</span><span style="color:#3A94C5">  wire</span><span style="color:#5C6A72"> [ </span><span style="color:#DF69BA">4</span><span style="color:#F57D26">:</span><span style="color:#DF69BA">0</span><span style="color:#5C6A72">] i_rs2_raddr,</span></span>
+<span class="line"><span style="color:#3A94C5">    output</span><span style="color:#3A94C5"> wire</span><span style="color:#5C6A72"> [</span><span style="color:#DF69BA">31</span><span style="color:#F57D26">:</span><span style="color:#DF69BA">0</span><span style="color:#5C6A72">] o_rs2_rdata,</span></span>
+<span class="line"><span style="color:#3A94C5">    input</span><span style="color:#3A94C5">  wire</span><span style="color:#5C6A72">        i_rd_wen,</span></span>
+<span class="line"><span style="color:#3A94C5">    input</span><span style="color:#3A94C5">  wire</span><span style="color:#5C6A72"> [ </span><span style="color:#DF69BA">4</span><span style="color:#F57D26">:</span><span style="color:#DF69BA">0</span><span style="color:#5C6A72">] i_rd_waddr,</span></span>
+<span class="line"><span style="color:#3A94C5">    input</span><span style="color:#3A94C5">  wire</span><span style="color:#5C6A72"> [</span><span style="color:#DF69BA">31</span><span style="color:#F57D26">:</span><span style="color:#DF69BA">0</span><span style="color:#5C6A72">] i_rd_wdata</span></span>
+<span class="line"><span style="color:#5C6A72">);</span></span>
+<span class="line"><span style="color:#939F91;font-style:italic">    // TODO: Fill in your implementation here.</span></span>
+<span class="line"><span style="color:#F85552">endmodule</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#35A77C">`</span><span style="color:#DFA000">default_nettype</span><span style="color:#3A94C5"> wire</span></span>
+<span class="line"></span></code></pre>
+<p>Using the provided <code>rf.v</code> interface above or in the <a href="https://github.com/wiscarch/riscv32i-arch-course-starter-fa26/tree/main/project2">Project 2 repository</a> on GitHub, implement a register file that you'll later use for your RISCV-32I processor. The starter file has detailed documentation on the requirements and interface; please read carefully. At a high level, your register file will:</p>
+<ol>
+<li>Contain 32 (deep) 32-bit (wide) registers, with the lowest indexed register (x0, or zero) hardwired to 0x00000000.</li>
+<li>Be capable of reading two registers per cycle and writing one register per cycle.</li>
+<li>Allow a bypass mode, which when enabled, allows a write to be observed at the read ports in the same cycle it is to be executed (see starter file comments).</li>
+<li>You may also use behavioral <code>if</code>/<code>else</code> Verilog for this problem only. Structural, synthesizable loop generation (<code>generate</code>/<code>genvar</code>) is always fine, on this problem and every other. Procedural loops (<code>for</code>, <code>while</code>, etc. inside an <code>always</code> block, outside a <code>generate</code>) are not permitted -- unroll manually if you're not using <code>generate</code>/<code>genvar</code>.</li>
+</ol>
+<p>Here's a quick diagram of your register file ports. Again see the comments (in the version on GitHub) for a more detailed explanation of each of the signals.</p>
+<p><img src="../images/rf_diagram.png" alt="Register File Diagram"></p>
+<p>Answer the free response questions related to this problem (near the bottom of this page) in <code>project2.txt</code>.</p>
+</div>
+<div class="instructions-box">
+<h2 id="problem-3-arithmetic-logic-unit" tabindex="-1">Problem 3: Arithmetic Logic Unit</h2>
+<p>The core arithmetic functionality of a CPU, including the processor built in this course, is typically carried out in an arithmetic logic unit, or ALU. To implement the RV32I instruction set, the ALU needs to be able to perform basic arithmetic (addition and subtraction), comparisons, bitwise logic (and, or, xor) and bit shifts.</p>
+<pre class="shiki everforest-light" style="background-color:#efece4;color:#5c6a72" tabindex="0"><code><span class="line"><span style="color:#35A77C">`</span><span style="color:#DFA000">default_nettype</span><span style="color:#5C6A72"> none</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F85552">module</span><span style="color:#35A77C"> alu</span><span style="color:#5C6A72"> (</span></span>
+<span class="line"><span style="color:#3A94C5">    input</span><span style="color:#3A94C5">  wire</span><span style="color:#5C6A72"> [ </span><span style="color:#DF69BA">2</span><span style="color:#F57D26">:</span><span style="color:#DF69BA">0</span><span style="color:#5C6A72">] i_opsel,</span></span>
+<span class="line"><span style="color:#3A94C5">    input</span><span style="color:#3A94C5">  wire</span><span style="color:#5C6A72">        i_sub,</span></span>
+<span class="line"><span style="color:#3A94C5">    input</span><span style="color:#3A94C5">  wire</span><span style="color:#5C6A72">        i_unsigned,</span></span>
+<span class="line"><span style="color:#3A94C5">    input</span><span style="color:#3A94C5">  wire</span><span style="color:#5C6A72">        i_arith,</span></span>
+<span class="line"><span style="color:#3A94C5">    input</span><span style="color:#3A94C5">  wire</span><span style="color:#5C6A72"> [</span><span style="color:#DF69BA">31</span><span style="color:#F57D26">:</span><span style="color:#DF69BA">0</span><span style="color:#5C6A72">] i_op1,</span></span>
+<span class="line"><span style="color:#3A94C5">    input</span><span style="color:#3A94C5">  wire</span><span style="color:#5C6A72"> [</span><span style="color:#DF69BA">31</span><span style="color:#F57D26">:</span><span style="color:#DF69BA">0</span><span style="color:#5C6A72">] i_op2,</span></span>
+<span class="line"><span style="color:#3A94C5">    output</span><span style="color:#3A94C5"> wire</span><span style="color:#5C6A72"> [</span><span style="color:#DF69BA">31</span><span style="color:#F57D26">:</span><span style="color:#DF69BA">0</span><span style="color:#5C6A72">] o_result,</span></span>
+<span class="line"><span style="color:#3A94C5">    output</span><span style="color:#3A94C5"> wire</span><span style="color:#5C6A72">        o_eq,</span></span>
+<span class="line"><span style="color:#3A94C5">    output</span><span style="color:#3A94C5"> wire</span><span style="color:#5C6A72">        o_slt</span></span>
+<span class="line"><span style="color:#5C6A72">);</span></span>
+<span class="line"><span style="color:#939F91;font-style:italic">    // TODO: Fill in your implementation here.</span></span>
+<span class="line"><span style="color:#F85552">endmodule</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#35A77C">`</span><span style="color:#DFA000">default_nettype</span><span style="color:#3A94C5"> wire</span></span>
+<span class="line"></span></code></pre>
+<p>Use the provided <code>alu.v</code> interface above or in the <a href="https://github.com/wiscarch/riscv32i-arch-course-starter-fa26/tree/main/project2">Project 2 repository</a> on GitHub as a starting point to design an arithmetic logic unit. While the interface must remain constant for this phase (to ensure compatibility with the grader), how the internal logic is implemented is up to you – and changes to the interface will be possible in future phases. For more information, refer to the lectures or textbook (describes how to implement everything; reading it is the best thing you can do to succeed in this class).</p>
+<p>Here's a quick diagram of your ALU ports. Again, see the comments in <code>alu.v</code> for a more detailed explanation of each of the signals.</p>
+<p><img src="../images/alu_diagram.png" alt="ALU Diagram"></p>
+<p>Answer the free response questions related to this problem (near the bottom of this page) in <code>project2.txt</code>.</p>
+</div>
+<div class="instructions-box">
+<h2 id="free-response-questions" tabindex="-1">Free Response Questions</h2>
+<p>Answer the following free-response questions in a text file named <code>project2.txt</code>. Use the template below to format your answers. Replace <code>your_name</code> with your actual name and replace <code>answers[0]</code>, <code>answers[1]</code>, ..., <code>answers[N]</code> with your actual answers to each question.</p>
+<p><strong>Submission Template</strong></p>
+<pre class="shiki everforest-light" style="background-color:#efece4;color:#5c6a72" tabindex="0"><code><span class="line"><span>Author: your_name</span></span>
+<span class="line"><span>[Q0]: answers[0]</span></span>
+<span class="line"><span>[Q1]: answers[1]</span></span>
+<span class="line"><span>...</span></span>
+<span class="line"><span>[QN]: answers[N]</span></span>
+<span class="line"><span></span></span></code></pre>
+<h3 id="problem-1" tabindex="-1">Problem 1</h3>
+<p><strong>[Q0] Think:</strong> What happens if you select the wrong encoding as output? What is the immediate used for in R type instructions?</p>
+<p><strong>[Q1] Think:</strong> Why do some formats (B-type, J-type) not specify imm[0], instead hardcoding it to zero? What would be the downside of removing this (and specifying all lower bits of the immediate including imm[0])?</p>
+<p><strong>[Q2] Research:</strong> Some instruction formats have complex immediate encodings; J and U-type formats use a convoluted ordering of bits to construct the immediate while others use continuous bitstrings. Why do you think this is? Look through the ISA reference and the official RISC-V specification on the <a href="../html/reference.html">Reference Materials</a> page for any hints from the designers of RISC-V.</p>
+<h3 id="problem-2" tabindex="-1">Problem 2</h3>
+<p><strong>[Q3] Reflect:</strong> What should happen when you try to write to x0 (the hardwired zero register)?</p>
+<p><strong>[Q4] Reflect:</strong> Why is the program counter register not included in the register file?</p>
+<p><strong>[Q5] Think:</strong> How would you increase or decrease the number of registers in the register file? What else (hint: think about how registers relate to the ISA) would have to be modified to support this change?</p>
+<h3 id="problem-3" tabindex="-1">Problem 3</h3>
+<p><strong>[Q6] Reflect:</strong> In a future phase, you'll write a processor that implements the RV32I ISA. How will you use these components (register file, immediate decoder, arithmetic logic unit) to do so? What other major components will you need to build?</p>
+<p><strong>[Q7] Think:</strong> Think about how this project phase and the previous connect to one another. How would you create a hardware multiply instruction and make it available in the ISA?</p>
+<p><strong>[Q8] Research:</strong> How would you implement instructions that operate on just the upper or lower 16 bits of a word? In other words, can you implement 16-bit instructions in a 32-bit processor? What modifications would you need to make to the register file, immediate encoder, and ALU?</p>
+</div>
+<div class="instructions-box">
+<h2 id="submission-instructions" tabindex="-1">Submission Instructions</h2>
+<p>Submit the following files to the appropriate Gradescope assignment:</p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Deliverable</th>
+<th>Points</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>imm.v</code></td>
+<td>15</td>
+<td>Autograded. See problem 1.</td>
+</tr>
+<tr>
+<td><code>rf.v</code></td>
+<td>10</td>
+<td>Autograded. See problem 2.</td>
+</tr>
+<tr>
+<td><code>alu.v</code></td>
+<td>20</td>
+<td>Autograded. See problem 3.</td>
+</tr>
+<tr>
+<td>Any other verilog files</td>
+<td>N/A</td>
+<td>If it is used in your design, include it.</td>
+</tr>
+<tr>
+<td><code>project2.txt</code></td>
+<td>15</td>
+<td>Graded manually, after the deadline. Submission Template<br>Author: your_name<br>[Q0]: answers[0]<br>[Q1]: answers[1]<br>...<br>[QN]: answers[N]</td>
+</tr>
+</tbody>
+</table>
+</div><p>Filenames must match exactly. Please double check to ensure that you have submitted all of the required files.</p>
+<p><strong>Note:</strong> Gradescope will only show your score for <code>imm.v</code>/<code>rf.v</code>/<code>alu.v</code> (out of 45) immediately after submitting -- <code>project2.txt</code>'s 15 points aren't reflected until it's graded manually.</p>
+<p>This project will be worth 2.5% of your final course grade. The results of any manually graded content will be made available after the deadline.</p>
+</div>
+
+
+                        
+                        <nav class="wa-docs-prev-next">
+                            
+                            <a href="/project1/"><span class="arrow" aria-hidden="true">&lsaquo;</span> Project 1: RISC-V Assembly Language</a>
+                            
+                            
+                        </nav>
+                        
+                    </article>
+
+                    
+                    <nav class="wa-docs-toc" aria-label="Table of Contents">
+                        <div class="h">Table of Contents</div>
+                        <ul class="wa-docs-toc-list">
+                            
+                            
+                            <li><a href="#project-introduction">Project Introduction</a></li>
+                            
+                            
+                            
+                            <li><a href="#note-on-coding-style-and-project-management">Note on Coding Style and Project Management</a></li>
+                            
+                            
+                            
+                            <li><a href="#problem-1-debugging-an-immediate-generator">Problem 1: Debugging an Immediate Generator</a></li>
+                            
+                            
+                            
+                            <li><a href="#problem-2-register-file">Problem 2: Register File</a></li>
+                            
+                            
+                            
+                            <li><a href="#problem-3-arithmetic-logic-unit">Problem 3: Arithmetic Logic Unit</a></li>
+                            
+                            
+                            
+                            <li>
+                                <details>
+                                    <summary><a href="#free-response-questions">Free Response Questions</a></summary>
+                                    <ul class="wa-docs-toc-sublist">
+                                    
+                                        <li><a href="#problem-1">Problem 1</a></li>
+                                    
+                                        <li><a href="#problem-2">Problem 2</a></li>
+                                    
+                                        <li><a href="#problem-3">Problem 3</a></li>
+                                    
+                                    </ul>
+                                </details>
+                            </li>
+                            
+                            
+                            
+                            <li><a href="#submission-instructions">Submission Instructions</a></li>
+                            
+                            
+                        </ul>
+                    </nav>
+                    
+                </div>
+
+                <footer class="wa-docs-footer">
+                    <p>2026 ECE 552 Course Staff, University of Wisconsin-Madison</p>
+                </footer>
+            </main>
+        </div>
+
+        
+        <script>
+            (function () {
+                var btn = document.querySelector('[data-disclosure]');
+                var nav = document.getElementById('wa-docs-rail-nav');
+                if (!btn || !nav) return;
+                btn.addEventListener('click', function () {
+                    var hidden = nav.hasAttribute('data-mobile-hidden');
+                    if (hidden) {
+                        nav.removeAttribute('data-mobile-hidden');
+                    } else {
+                        nav.setAttribute('data-mobile-hidden', '');
+                    }
+                    btn.setAttribute('aria-expanded', hidden ? 'true' : 'false');
+                    btn.querySelector('.wa-docs-disclosure-icon').textContent = hidden ? '×' : '+';
+                });
+            })();
+        </script>
+    </body>
+</html>
