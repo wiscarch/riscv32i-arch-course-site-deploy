@@ -1,0 +1,332 @@
+
+
+
+
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Project 3: Single-Cycle Processor</title>
+        <link rel="stylesheet" href="/styles/site.css">
+
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Red+Hat+Display:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,500;1,600&family=Red+Hat+Mono:wght@300;400;500;600&display=swap" rel="stylesheet">
+    </head>
+
+    <body>
+        <div class="wa-docs-shell">
+            <aside class="wa-docs-rail">
+                
+                <div class="wa-docs-rail-head">
+                    <a class="wa-wordmark" href="/"><span class="wisc">ECE</span><span class="arch">552</span></a>
+                    <span class="wa-docs-rail-version">Fall 2026</span>
+                </div>
+
+                
+                <button type="button" class="wa-docs-disclosure-summary" aria-expanded="false" aria-controls="wa-docs-rail-nav" data-disclosure>
+                    <span class="wa-docs-disclosure-label">Project 3: Single-Cycle Processor</span>
+                    <span class="wa-docs-disclosure-icon" aria-hidden="true">+</span>
+                </button>
+
+                <nav id="wa-docs-rail-nav" class="wa-docs-rail-nav" aria-label="Project 3: Single-Cycle Processor" data-mobile-hidden>
+                    
+                    
+                    <a class="wa-docs-rail-link" href="/project1/">Project 1: RISC-V Assembly Language</a>
+                    
+                    <a class="wa-docs-rail-link" href="/project2/">Project 2: Digital Design and Debugging</a>
+                    
+                    <a class="wa-docs-rail-link is-active" href="/project3/">Project 3: Single-Cycle Processor</a>
+                    
+                    <a class="wa-docs-rail-link" href="/schedule/">Project Schedule</a>
+                    <a class="wa-docs-rail-link" href="/rules/">Verilog Rules</a>
+                    <a class="wa-docs-rail-link" href="/html/reference.html">Reference Materials</a>
+                </nav>
+            </aside>
+
+            <main class="wa-docs-main">
+                <div class="wa-docs-topbar">
+                    <div class="wa-docs-breadcrumb">
+                        
+                        <span class="crumb-mono">ECE 552</span>
+                        <span class="crumb-sep" aria-hidden="true">/</span>
+                        
+                        <span class="crumb-cur">Project 3: Single-Cycle Processor</span>
+                    </div>
+                    
+                    <div class="wa-docs-topbar-right">
+                        <a class="wa-docs-topbar-link" href="/">Back to Course Home</a>
+                    </div>
+                    
+                </div>
+
+                <div class="wa-docs-content">
+                    <article class="wa-docs-article">
+                        
+                        <h1 class="wa-docs-h1">Project 3: Single-Cycle Processor</h1>
+                        <p class="wa-docs-page-tag">UW—Madison ECE 552: Fall 2026</p>
+
+                        <div class="instructions-box">
+<h2 id="project-introduction" tabindex="-1">Project Introduction</h2>
+<p>In this project phase, you will create a fully functional single-cycle processor implementing the RISC-V RV32I ISA.</p>
+<p>Implementations must be created using Verilog; SystemVerilog will not be allowed and will result in a grade of 0 for Problem 2 if used. This assignment is designed to be completed in a group of 2-3. Collaboration between groups is not permitted. IMPORTANT: Make your final submissions in your groups on Gradescope. If you do not, the teaching staff will have to do this manually.</p>
+<p>Generative artificial intelligence (e.g. ChatGPT) is permitted for this assignment; however, LLMs generally struggle with this type of hardware design work, and overly relying on them may make this project phase and subsequent phases significantly harder to complete.</p>
+<p>This project will be worth 10% of your final course grade. The automated tests on Gradescope comprise the majority of the points. The schematic is worth a fair portion.</p>
+<p>All material is available in the <a href="https://github.com/wiscarch/riscv32i-arch-course-starter-fa26/tree/main/project3">Project 3 repository</a> on GitHub. You can clone the repository locally or on a CSL machine.</p>
+<p>If there are any issues with Gradescope or the files provided, please post on Piazza rather than emailing. If you are having difficulty with this project, office hours are held several times a week where assistance is available.</p>
+<p>Good luck!</p>
+</div>
+<div class="instructions-box">
+<h2 id="problem-1-schematic" tabindex="-1">Problem 1: Schematic</h2>
+<p>Before writing a single line of code, you must complete a schematic representing the data and control paths of your processor. You must use graphic design software, e.g. Figma (web-based), MS paint (convenient for windows machines), draw.io (web-based), inkscape (available on CAE Linux machines), etc., to create this schematic. It is recommended to create your schematic in the following order:</p>
+<h3 id="full-data-path-of-processor-including-but-not-limited-to" tabindex="-1">Full data path of processor, including but not limited to</h3>
+<ol>
+<li>Functional modules such as the arithmetic logic unit (ALU), register file, instruction decoder, program counter (PC) register, etc.</li>
+<li>Multiplexers for selection logic for ALU operands, write back data, register selection, etc.</li>
+<li>Any other logic required (CLAs, zero/sign extenders, etc.)</li>
+</ol>
+<h3 id="full-control-path-of-processor-outputs-from-instruction-decoder-including-but-not-limited-to" tabindex="-1">Full control path of processor (outputs from instruction decoder), including but not limited to</h3>
+<ol>
+<li>ALU signal operand logic</li>
+<li>Memory address selection</li>
+<li>Write back selection</li>
+<li>Branch handling</li>
+</ol>
+<p>Note: not all the components required have been described; fill in your schematic with the details of your implementation. Also, you are not required to draw boundaries between pipeline stages but it is recommended (you'll need to do this in the next project).</p>
+<h3 id="additional-requirements" tabindex="-1">Additional Requirements</h3>
+<ol>
+<li>Show the bit-width of each signal in your processor (e.g. instructions fetched produce a 32-bit ([31:0]) signal).</li>
+<li>Differentiate between combinational (stateless) and sequential (flip-flop) logic by drawing a small triangle at the bottom of any sequential logic modules (PC, RF, etc.)</li>
+<li>For each instruction type, trace the execution path of a sample instruction in a bright color. For example, for R-type instructions, which modules are required?</li>
+</ol>
+<p>For assistance completing this problem, please consult the textbook. Your schematic should resemble the one from the textbook, but you must determine which logic and control signals are required for your implementation.</p>
+<p>IMPORTANT: The textbook schematic is just a starting point; you are supposed to determine which signals you need and where they go.</p>
+<p>The simulator mentioned in Problem 2 may also help you with this problem.</p>
+<p>Your final schematic must reflect any changes made when implementing your processor in Verilog in Problem 2.</p>
+<p>You are required to submit one schematic.pdf, and one {x}_type_schematic.pdf for each x in {r, i, s, b, u, j} that traces the data path of the respective instruction type.</p>
+<p>Here is an example of what the ALU might look like in your design. Please note that this will need to be connected to other modules.</p>
+<p><img src="../images/alu_diagram2.png" alt="ALU Diagram"></p>
+<p>Here is an example of a schematic taken from the textbook. Please note that this is a very simplified version of the schematic you will be making, and is also for a different processor than the one you will be making.</p>
+<p><img src="../images/schematic.png" alt="Schematic"></p>
+<p>Here is an example of how the instruction type tracing should look.</p>
+<p><img src="../images/schematic_trace.png" alt="Schematic Trace"></p>
+<p>Please note that you do not have to include the retire interface signals (o_retire_*) provided in <code>hart.v</code> in your schematic, more on that in the FAQ section.</p>
+</div>
+<div class="instructions-box">
+<h2 id="problem-2-processor-implementation" tabindex="-1">Problem 2: Processor Implementation</h2>
+<p>Please implement a single-cycle processor that implements the RISC-V RV32I ISA. You will be graded proportionally to the number of tests that you pass.</p>
+<h3 id="resources" tabindex="-1">Resources</h3>
+<p>The <a href="../html/reference.html">RISCV-32I specification document</a> is the primary document to reference how instructions are implemented.</p>
+<p>The <a href="../html/reference.html">reference sheet</a> is helpful when writing programs or as a quick reference.</p>
+<p>You may find <a href="https://ripes.dk/">this simulator</a> helpful for visualizing how your processor should execute, and for verifying functional correctness and performance.</p>
+<p>Using <a href="https://luplab.gitlab.io/rvcodecjs/">this decoder</a> to assemble RISC-V instructions is also recommended for testing and examining instructions when debugging.</p>
+<h3 id="local-testing" tabindex="-1">Local Testing</h3>
+<p>To run code on your own processor, set your directory up as follows (this is how the git repo is configured by default):</p>
+<p>tb/                         -&gt; testbench directory; where program.mem is written to</p>
+<p>rtl/                        -&gt; your implementation code (all in same directory, no subdirectories)</p>
+<p>tests/asm/                  -&gt; assembly tests with .asm extension go here</p>
+<p>traces/                     -&gt; trace output can be placed here</p>
+<p>Take a look at RV32I programs under the tests/asm directory. The ebreak instruction is used to halt the processor. You will also implement the ebreak instruction in this project. Not implementing it will cause the testbench to enter an infinite loop. See the <a href="../html/reference.html">Reference Materials</a> page for more details.</p>
+<p>To assemble a RV32I program, pull (or update) the docker container:</p>
+<pre class="shiki everforest-light" style="background-color:#efece4;color:#5c6a72" tabindex="0"><code><span class="line"><span style="color:#8DA101">docker</span><span style="color:#DFA000"> pull</span><span style="color:#DFA000"> coderkalyan/ece552-tools:latest</span></span>
+<span class="line"><span style="color:#DFA000">cd</span><span style="color:#DFA000"> tests/asm/</span></span>
+<span class="line"></span></code></pre>
+<p>Run the following command to assemble the program 01add.asm under tests/asm/ directory. Change 01add to the name of the program you’d like to assemble.</p>
+<pre class="shiki everforest-light" style="background-color:#efece4;color:#5c6a72" tabindex="0"><code><span class="line"><span style="color:#8DA101">make</span><span style="color:#DFA000"> PROGRAM=01add</span></span>
+<span class="line"></span></code></pre>
+<p>Then run your tb.v (using Icarus, Modelsim, etc.) and inspect the trace generated to make sure your processor works as expected. Repeat the process for all the tests provided, and write your own. Example for running tb in Icarus (exact command may vary depending on your directory structure):</p>
+<pre class="shiki everforest-light" style="background-color:#efece4;color:#5c6a72" tabindex="0"><code><span class="line"><span style="color:#DFA000">cd</span><span style="color:#DFA000"> tb</span></span>
+<span class="line"><span style="color:#8DA101">iverilog</span><span style="color:#DFA000"> ../rtl/</span><span style="color:#DF69BA">*</span><span style="color:#DFA000">.v</span><span style="color:#DFA000"> tb.v</span></span>
+<span class="line"><span style="color:#8DA101">./a.out</span><span style="color:#939F91;font-style:italic"> # can also redirect to a file with ></span></span>
+<span class="line"></span></code></pre>
+<p>In addition to the provided tests, you are also encouraged to write your own tests to test as exhaustively as possible. Only a few of the tests being run on Gradescope are provided here; in future project phases, access will be granted to the rest.</p>
+<p>NOTE: it is recommended to divide the CPU into modules by pipeline stage (fetch, decode, execute, memory, writeback); this may make subsequent projects easier but is not required for this project. For more details, read the textbook.</p>
+<h3 id="gradescope" tabindex="-1">Gradescope</h3>
+<p>Submit your code to Gradescope as often as desired to verify your processor. Verilog coding rules are enforced for this project. A centralized list of these rules can be found <a href="../rules">here</a>. The rule-checking script will run every time the processor is submitted, first checking for compiler errors, then disallowed constructs. Once a submission passes the rules check, a trace comparison will be performed between the submitted processor and the reference implementation. You can run the exact same checker locally before submitting -- <code>ece552 validate -w *.v</code> -- see the starter repository's <code>python-ece552/README.md</code> for setup.</p>
+</div>
+<div class="instructions-box">
+<h2 id="additional-notes-frequently-asked-questions-faqs" tabindex="-1">Additional Notes (Frequently Asked Questions/FAQs)</h2>
+<p>Do not use Gradescope as your main debugging interface. Debug your processor locally using Modelsim or Icarus. Icarus is used for grading, which is generally less strict than Modelsim.</p>
+<h3 id="provided-modules" tabindex="-1">Provided Modules</h3>
+<p>Do not modify the hart interface.</p>
+<p>If you modify the testbench, make sure that you do not change anything that would cause your processor to give a different output. This testbench is used on Gradescope to compare a reference implementation to yours, so if you change the testbench significantly, the results you get on Gradescope may differ from what you get locally. Do not submit tb.v to Gradescope as this will cause a compilation error.</p>
+<p>You may modify the ALU, register file, and immediate decoder interfaces in any way you would like, but this is not necessary and may make it more difficult for the teaching staff to provide assistance. You must disable register file bypassing when you instantiate the register file in your processor (<code>BYPASS_EN = 0</code>).</p>
+<p>You should not make a memory module in your processor as both the instruction and data memories are instantiated in the tb, accessible via the hart interface.</p>
+<h3 id="infinite-loops" tabindex="-1">Infinite Loops</h3>
+<p>The minimum timeout that can be set on Gradescope is 10 minutes. If you enter an infinite loop for some reason, you will not be able to resubmit for 10 minutes. If your code is working locally but not on Gradescope, check to make sure that you are using the most up to date testbench.</p>
+<p>If you enter an infinite loop, it is likely that one of the following has occurred:</p>
+<ol>
+<li>Your <code>ebreak</code> instruction does not halt the processor correctly, causing the processor to spin wait indefinitely.</li>
+<li>Something is off with your <code>next_pc</code> logic; the next instruction is never fetched and thus the processor spin waits indefinitely.</li>
+<li>You have other errors that prevent your processor from executing correctly (e.g. a jump or branch instruction goes to the wrong place, causing your processor to get stuck in an infinite loop)</li>
+<li>You exceeded the max recursion depth for module instantiation in Icarus. This is a very rare bug that has only been observed once, during a previous semester's final project phase. If your processor is working locally with the most up to date testbench, but still spins indefinitely on Gradescope, email the teaching staff directly.</li>
+</ol>
+<h3 id="assembly-tests" tabindex="-1">Assembly Tests</h3>
+<p>The first few assembly tests used to test your processor on Gradescope are provided here. You will receive access to the rest of the tests starting in Project 4. Some assembly tests contain pseudo ops (like <code>li</code>, etc.) which compile to standard RISCV-32I instructions.</p>
+<p>You can debug instructions that are not in the provided tests by creating your own tests using those instructions. When creating your own tests, make sure to end the assembly code with <code>ebreak</code> or your processor will not halt.</p>
+<p>You must build the tests into program.mem and make sure program.mem is in the same directory as your tb.v in order to run the test properly.</p>
+<h3 id="retire-interface" tabindex="-1">Retire Interface</h3>
+<p>You may notice that there are several signals provided in the interface for <code>hart.v</code> that start with the prefix <code>o_retire</code>. These signals are used by <code>tb.v</code> to understand which instructions your processor is executing, and in what order.  Each cycle that <code>o_retire_valid</code> is asserted, the testbench will assume that an instruction was completed (and look for which instruction by reading the other <code>o_retire_*</code> signals), and print a new line in the trace output. For project 3, your single cycle processor should assert <code>o_retire_valid</code> every cycle.</p>
+<p>From the interface:</p>
+<pre class="shiki everforest-light" style="background-color:#efece4;color:#5c6a72" tabindex="0"><code><span class="line"><span style="color:#939F91;font-style:italic">// The output `retire` interface is used to signal to the testbench that</span></span>
+<span class="line"><span style="color:#939F91;font-style:italic">// the CPU has completed and retired an instruction. A single cycle</span></span>
+<span class="line"><span style="color:#939F91;font-style:italic">// implementation will assert this every cycle; however, a pipelined</span></span>
+<span class="line"><span style="color:#939F91;font-style:italic">// implementation that needs to stall (due to internal hazards or waiting</span></span>
+<span class="line"><span style="color:#939F91;font-style:italic">// on memory accesses) will not assert the signal on cycles where the</span></span>
+<span class="line"><span style="color:#939F91;font-style:italic">// instruction in the writeback stage is not retiring.</span></span>
+<span class="line"><span style="color:#939F91;font-style:italic">//</span></span>
+<span class="line"><span style="color:#939F91;font-style:italic">// Asserted when an instruction is being retired this cycle. If this is</span></span>
+<span class="line"><span style="color:#939F91;font-style:italic">// not asserted, the other retire signals are ignored and may be left invalid.</span></span>
+<span class="line"><span style="color:#3A94C5">output</span><span style="color:#3A94C5"> wire</span><span style="color:#5C6A72">        o_retire_valid,</span></span>
+<span class="line"><span style="color:#939F91;font-style:italic">// The 32 bit instruction word of the instrution being retired. This</span></span>
+<span class="line"><span style="color:#939F91;font-style:italic">// should be the unmodified instruction word fetched from instruction</span></span>
+<span class="line"><span style="color:#939F91;font-style:italic">// memory.</span></span>
+<span class="line"><span style="color:#3A94C5">output</span><span style="color:#3A94C5"> wire</span><span style="color:#5C6A72"> [</span><span style="color:#DF69BA">31</span><span style="color:#F57D26">:</span><span style="color:#DF69BA">0</span><span style="color:#5C6A72">] o_retire_inst,</span></span>
+<span class="line"><span style="color:#939F91;font-style:italic">// Asserted if the instruction produced a trap, due to an illegal</span></span>
+<span class="line"><span style="color:#939F91;font-style:italic">// instruction, unaligned data memory access, or unaligned instruction</span></span>
+<span class="line"><span style="color:#939F91;font-style:italic">// address on a taken branch or jump.</span></span>
+<span class="line"><span style="color:#3A94C5">output</span><span style="color:#3A94C5"> wire</span><span style="color:#5C6A72">        o_retire_trap,</span></span>
+<span class="line"><span style="color:#939F91;font-style:italic">// Asserted if the instruction is an `ebreak` instruction used to halt the</span></span>
+<span class="line"><span style="color:#939F91;font-style:italic">// processor. This is used for debugging and testing purposes to end</span></span>
+<span class="line"><span style="color:#939F91;font-style:italic">// a program.</span></span>
+<span class="line"><span style="color:#3A94C5">output</span><span style="color:#3A94C5"> wire</span><span style="color:#5C6A72">        o_retire_halt,</span></span>
+<span class="line"><span style="color:#939F91;font-style:italic">// The first register address read by the instruction being retired. If</span></span>
+<span class="line"><span style="color:#939F91;font-style:italic">// the instruction does not read from a register (like `lui`), this</span></span>
+<span class="line"><span style="color:#939F91;font-style:italic">// should be 5'd0.</span></span>
+<span class="line"><span style="color:#3A94C5">output</span><span style="color:#3A94C5"> wire</span><span style="color:#5C6A72"> [ </span><span style="color:#DF69BA">4</span><span style="color:#F57D26">:</span><span style="color:#DF69BA">0</span><span style="color:#5C6A72">] o_retire_rs1_raddr,</span></span>
+<span class="line"><span style="color:#939F91;font-style:italic">// The second register address read by the instruction being retired. If</span></span>
+<span class="line"><span style="color:#939F91;font-style:italic">// the instruction does not read from a second register (like `addi`), this</span></span>
+<span class="line"><span style="color:#939F91;font-style:italic">// should be 5'd0.</span></span>
+<span class="line"><span style="color:#3A94C5">output</span><span style="color:#3A94C5"> wire</span><span style="color:#5C6A72"> [ </span><span style="color:#DF69BA">4</span><span style="color:#F57D26">:</span><span style="color:#DF69BA">0</span><span style="color:#5C6A72">] o_retire_rs2_raddr,</span></span>
+<span class="line"><span style="color:#939F91;font-style:italic">// The first source register data read from the register file (in the</span></span>
+<span class="line"><span style="color:#939F91;font-style:italic">// decode stage) for the instruction being retired. If rs1 is 5'd0, this</span></span>
+<span class="line"><span style="color:#939F91;font-style:italic">// should also be 32'd0.</span></span>
+<span class="line"><span style="color:#3A94C5">output</span><span style="color:#3A94C5"> wire</span><span style="color:#5C6A72"> [</span><span style="color:#DF69BA">31</span><span style="color:#F57D26">:</span><span style="color:#DF69BA">0</span><span style="color:#5C6A72">] o_retire_rs1_rdata,</span></span>
+<span class="line"><span style="color:#939F91;font-style:italic">// The second source register data read from the register file (in the</span></span>
+<span class="line"><span style="color:#939F91;font-style:italic">// decode stage) for the instruction being retired. If rs2 is 5'd0, this</span></span>
+<span class="line"><span style="color:#939F91;font-style:italic">// should also be 32'd0.</span></span>
+<span class="line"><span style="color:#3A94C5">output</span><span style="color:#3A94C5"> wire</span><span style="color:#5C6A72"> [</span><span style="color:#DF69BA">31</span><span style="color:#F57D26">:</span><span style="color:#DF69BA">0</span><span style="color:#5C6A72">] o_retire_rs2_rdata,</span></span>
+<span class="line"><span style="color:#939F91;font-style:italic">// The destination register address written by the instruction being</span></span>
+<span class="line"><span style="color:#939F91;font-style:italic">// retired. If the instruction does not write to a register (like `sw`),</span></span>
+<span class="line"><span style="color:#939F91;font-style:italic">// this should be 5'd0.</span></span>
+<span class="line"><span style="color:#3A94C5">output</span><span style="color:#3A94C5"> wire</span><span style="color:#5C6A72"> [ </span><span style="color:#DF69BA">4</span><span style="color:#F57D26">:</span><span style="color:#DF69BA">0</span><span style="color:#5C6A72">] o_retire_rd_waddr,</span></span>
+<span class="line"><span style="color:#939F91;font-style:italic">// The destination register data written to the register file in the</span></span>
+<span class="line"><span style="color:#939F91;font-style:italic">// writeback stage by this instruction. If rd is 5'd0, this field is</span></span>
+<span class="line"><span style="color:#939F91;font-style:italic">// ignored and can be treated as a don't care.</span></span>
+<span class="line"><span style="color:#3A94C5">output</span><span style="color:#3A94C5"> wire</span><span style="color:#5C6A72"> [</span><span style="color:#DF69BA">31</span><span style="color:#F57D26">:</span><span style="color:#DF69BA">0</span><span style="color:#5C6A72">] o_retire_rd_wdata,</span></span>
+<span class="line"><span style="color:#939F91;font-style:italic">// The current program counter of the instruction being retired - i.e.</span></span>
+<span class="line"><span style="color:#939F91;font-style:italic">// the instruction memory address that the instruction was fetched from.</span></span>
+<span class="line"><span style="color:#3A94C5">output</span><span style="color:#3A94C5"> wire</span><span style="color:#5C6A72"> [</span><span style="color:#DF69BA">31</span><span style="color:#F57D26">:</span><span style="color:#DF69BA">0</span><span style="color:#5C6A72">] o_retire_pc,</span></span>
+<span class="line"><span style="color:#939F91;font-style:italic">// the next program counter after the instruction is retired. For most</span></span>
+<span class="line"><span style="color:#939F91;font-style:italic">// instructions, this is `o_retire_pc + 4`, but must be the branch or jump</span></span>
+<span class="line"><span style="color:#939F91;font-style:italic">// target for *taken* branches and jumps.</span></span>
+<span class="line"><span style="color:#3A94C5">output</span><span style="color:#3A94C5"> wire</span><span style="color:#5C6A72"> [</span><span style="color:#DF69BA">31</span><span style="color:#F57D26">:</span><span style="color:#DF69BA">0</span><span style="color:#5C6A72">] o_retire_next_pc</span></span>
+<span class="line"></span></code></pre>
+<p>In future project phases, the trace output of your program will be almost identical to this project, but how the signals are asserted will need to change.</p>
+</div>
+<div class="instructions-box">
+<h2 id="submission-instructions" tabindex="-1">Submission Instructions</h2>
+<p>Submit the following files to the appropriate Gradescope assignment:</p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Deliverable</th>
+<th>Points</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>schematic.pdf</td>
+<td>10</td>
+<td>Graded manually, after the deadline. See Problem 1.</td>
+</tr>
+<tr>
+<td>{x}_type_schematic.pdf for each x in {r, i, s, b, u, j}</td>
+<td>10</td>
+<td>Graded manually, after the deadline. See Problem 1.</td>
+</tr>
+<tr>
+<td>All Verilog files required for <br>your processor to run (no folder hierarchy)</td>
+<td>125</td>
+<td>Autograded. If it is used in your design, include it.<br>See Problem 2.</td>
+</tr>
+<tr>
+<td><code>project3.txt</code></td>
+<td>0</td>
+<td>Graded manually, after the deadline. Submission Template<br>[Group Member 1]: Name<br>[Group Member 2]: Name<br>[Group Member 3]: Name</td>
+</tr>
+</tbody>
+</table>
+</div><p>Filenames must match exactly. Please double check to ensure that you have submitted all of the required files.</p>
+<p>This project will be worth 10% of your final course grade. <strong>Gradescope will only show your autograded Verilog score immediately -- schematic and free-response points aren't reflected until they're graded manually, after the deadline.</strong></p>
+</div>
+
+
+                        
+                        <nav class="wa-docs-prev-next">
+                            
+                            <a href="/project2/"><span class="arrow" aria-hidden="true">&lsaquo;</span> Project 2: Digital Design and Debugging</a>
+                            
+                            
+                        </nav>
+                        
+                    </article>
+
+                    
+                    <nav class="wa-docs-toc" aria-label="Table of Contents">
+                        <div class="h">Table of Contents</div>
+                        <ul class="wa-docs-toc-list">
+                            
+                            
+                            <li><a href="#project-introduction">Project Introduction</a></li>
+                            
+                            
+                            
+                            <li><a href="#problem-1-schematic">Problem 1: Schematic</a></li>
+                            
+                            
+                            
+                            <li><a href="#problem-2-processor-implementation">Problem 2: Processor Implementation</a></li>
+                            
+                            
+                            
+                            <li><a href="#additional-notes-frequently-asked-questions-faqs">Additional Notes (Frequently Asked Questions/FAQs)</a></li>
+                            
+                            
+                            
+                            <li><a href="#submission-instructions">Submission Instructions</a></li>
+                            
+                            
+                        </ul>
+                    </nav>
+                    
+                </div>
+
+                <footer class="wa-docs-footer">
+                    <p>2026 ECE 552 Course Staff, University of Wisconsin-Madison</p>
+                </footer>
+            </main>
+        </div>
+
+        
+        <script>
+            (function () {
+                var btn = document.querySelector('[data-disclosure]');
+                var nav = document.getElementById('wa-docs-rail-nav');
+                if (!btn || !nav) return;
+                btn.addEventListener('click', function () {
+                    var hidden = nav.hasAttribute('data-mobile-hidden');
+                    if (hidden) {
+                        nav.removeAttribute('data-mobile-hidden');
+                    } else {
+                        nav.setAttribute('data-mobile-hidden', '');
+                    }
+                    btn.setAttribute('aria-expanded', hidden ? 'true' : 'false');
+                    btn.querySelector('.wa-docs-disclosure-icon').textContent = hidden ? '×' : '+';
+                });
+            })();
+        </script>
+    </body>
+</html>
