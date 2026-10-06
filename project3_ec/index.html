@@ -1,0 +1,944 @@
+
+
+
+
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Project 3: Extra Credit - FPGA Demo</title>
+        <link rel="stylesheet" href="/styles/site.css">
+
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Red+Hat+Display:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,500;1,600&family=Red+Hat+Mono:wght@300;400;500;600&display=swap" rel="stylesheet">
+    </head>
+
+    <body>
+        <div class="wa-docs-shell">
+            <aside class="wa-docs-rail">
+                
+                <div class="wa-docs-rail-head">
+                    <a class="wa-wordmark" href="/"><span class="wisc">ECE</span><span class="arch">552</span></a>
+                    <span class="wa-docs-rail-version">Fall 2026</span>
+                </div>
+
+                
+                <button type="button" class="wa-docs-disclosure-summary" aria-expanded="false" aria-controls="wa-docs-rail-nav" data-disclosure>
+                    <span class="wa-docs-disclosure-label">Project 3: Extra Credit - FPGA Demo</span>
+                    <span class="wa-docs-disclosure-icon" aria-hidden="true">+</span>
+                </button>
+
+                <nav id="wa-docs-rail-nav" class="wa-docs-rail-nav" aria-label="Project 3: Extra Credit - FPGA Demo" data-mobile-hidden>
+                    
+                    
+                    <a class="wa-docs-rail-link" href="/project1/">Project 1: RISC-V Assembly Language</a>
+                    
+                    <a class="wa-docs-rail-link" href="/project2/">Project 2: Digital Design and Debugging</a>
+                    
+                    <a class="wa-docs-rail-link" href="/project3/">Project 3: Single-Cycle Processor</a>
+                    
+                    <a class="wa-docs-rail-link is-active" href="/project3_ec/">Project 3: Extra Credit - FPGA Demo</a>
+                    
+                    <a class="wa-docs-rail-link" href="/schedule/">Project Schedule</a>
+                    <a class="wa-docs-rail-link" href="/rules/">Verilog Rules</a>
+                    <a class="wa-docs-rail-link" href="/html/reference.html">Reference Materials</a>
+                </nav>
+            </aside>
+
+            <main class="wa-docs-main">
+                <div class="wa-docs-topbar">
+                    <div class="wa-docs-breadcrumb">
+                        
+                        <span class="crumb-mono">ECE 552</span>
+                        <span class="crumb-sep" aria-hidden="true">/</span>
+                        
+                        <span class="crumb-cur">Project 3: Extra Credit - FPGA Demo</span>
+                    </div>
+                    
+                    <div class="wa-docs-topbar-right">
+                        <a class="wa-docs-topbar-link" href="/">Back to Course Home</a>
+                    </div>
+                    
+                </div>
+
+                <div class="wa-docs-content">
+                    <article class="wa-docs-article">
+                        
+                        <h1 class="wa-docs-h1">Project 3: Extra Credit - FPGA Demo</h1>
+                        <p class="wa-docs-page-tag">UW—Madison ECE 552: Fall 2026</p>
+
+                        <div class="instructions-box">
+<h2 id="project-introduction" tabindex="-1">Project Introduction</h2>
+<p>This is an optional extra credit opportunity for Project 3. A successful demo is worth an extra 1% on top of your final course grade. By the end, you will have compiled a C program, loaded it into your own single-cycle processor, and watched it respond to switches and buttons on a DE1-SoC board.</p>
+<p>Your Project 3 submission does not change. Submit it to Gradescope exactly as before.</p>
+<p>All material is available in the <a href="https://github.com/wiscarch/riscv32i-arch-course-starter-fa26/tree/main/project3_ec">Project 3 Extra Credit repository</a> on GitHub. Everything except <code>rtl/soc_core.v</code> is finished: the memories, the I/O hardware, the board top level, the displays, the C programs and the whole toolchain are done. Your job is to wire your processor in, verify it in simulation, and compile it in Quartus.</p>
+</div>
+<div class="instructions-box">
+<h2 id="the-demo" tabindex="-1">The Demo</h2>
+<p>To earn the credit, you demo your design in discussion on <strong>10/14 or 10/21</strong>.</p>
+<p>IMPORTANT: You will not have access to a board before your demo. This is deliberate: it is how chip design works. A chip team does not get to try its design on silicon and fix it afterwards. It verifies everything it can in simulation and timing analysis, sends the design off to be fabricated, and finds out whether it works when the chip comes back. Here, your simulation and your Quartus timing report are all the evidence you get before the board.</p>
+<h3 id="what-to-bring" tabindex="-1">What to Bring</h3>
+<p>We provide the board and its USB-Blaster cable, and nothing else. <strong>We do not provide a computer</strong>, so you bring:</p>
+<ol>
+<li><strong>Your own laptop with Quartus installed</strong>, including the Programmer and the USB-Blaster driver (see <a href="#requirements">Requirements</a>). You flash the board from it, so install and check everything before discussion.</li>
+<li><strong>A compiled <code>.sof</code></strong> for the program you want to show. Changing the program means a full Quartus recompile (see <a href="#running-a-different-program">Running a Different Program</a>), so there is no time to build one in discussion. Bring a <code>.sof</code> for <code>echo</code> as well, as a fallback.</li>
+<li><strong>Your Quartus project</strong>, so you can open the compilation and timing reports from <a href="#step-5-compiling-in-quartus">Step 5</a> during the questions.</li>
+</ol>
+<h3 id="before-you-come" tabindex="-1">Before You Come</h3>
+<p>Since you cannot test on the board, make sure everything you <em>can</em> check passes:</p>
+<ol>
+<li><code>make sim</code> passes for the program you will show (<a href="#step-3-simulating-before-you-synthesize">Step 3</a>).</li>
+<li>Quartus compiles with no errors and <code>cpu_clk</code> meets timing (<a href="#step-5-compiling-in-quartus">Step 5</a>).</li>
+<li>You have read through the flashing steps in <a href="#step-6-flashing-the-board">Step 6</a>, so you are not seeing them for the first time at the demo.</li>
+</ol>
+<h3 id="at-the-demo" tabindex="-1">At the Demo</h3>
+<p>You power on the board and flash it yourself, in front of us, then use it: flip switches, press buttons, and show that your processor responds. Then we ask a few short questions about your design and the flow.</p>
+<h3 id="what-we-will-ask-about" tabindex="-1">What We Will Ask About</h3>
+<p>The questions are about <strong>timing</strong> and <strong>memory</strong>: what Quartus reported for your design, and why. You do not need to memorize numbers; have your reports open and find them as we ask. Everything you need is in <a href="#step-5-compiling-in-quartus">Step 5</a>.</p>
+<p><strong>Timing</strong></p>
+<ol>
+<li>Know your <code>cpu_clk</code> Fmax and whether your design meets timing. Be able to say what would happen on the board if it did not.</li>
+<li>Quartus reports timing for several <em>corners</em>: Slow and Fast, at 0 °C and 85 °C. Know why we tell you to read Slow 1100mV 85C.</li>
+<li>Find your critical path and trace it through your own schematic, stage by stage. Think about which instruction uses that path, and why that one is the slowest.</li>
+</ol>
+<p><strong>Memory</strong></p>
+<ol>
+<li>Look up what an <strong>M10K block</strong> is and how its read works, then compare that with how your processor reads instruction and data memory. Be ready to explain why the fitter used zero of them.</li>
+<li>Find what Quartus built <code>dmem</code> out of instead, and point to the numbers in the fitter report that show it.</li>
+<li><code>imem</code> and <code>dmem</code> are both 4 KB, but one costs far more than the other. Compare them in the per-module report and think about what makes them different.</li>
+</ol>
+</div>
+<div class="instructions-box">
+<h2 id="requirements" tabindex="-1">Requirements</h2>
+<p><strong>Docker</strong>, the same way you use it for the assembly tests in <code>tests/asm/</code>. Pull the toolchain image if you have not already:</p>
+<pre class="shiki everforest-light" style="background-color:#efece4;color:#5c6a72" tabindex="0"><code><span class="line"><span style="color:#8DA101">docker</span><span style="color:#DFA000"> pull</span><span style="color:#DFA000"> coderkalyan/ece552-tools:latest</span></span>
+<span class="line"></span></code></pre>
+<p>It carries the RISC-V compiler, Icarus Verilog and Python, so it is the only image you need and you do not need any of them installed on your machine.</p>
+<p>On Linux, Docker needs permission to run without <code>sudo</code>. If <code>docker run hello-world</code> fails with <code>permission denied ... docker.sock</code>, add yourself to the <code>docker</code> group, then log out and back in:</p>
+<pre class="shiki everforest-light" style="background-color:#efece4;color:#5c6a72" tabindex="0"><code><span class="line"><span style="color:#8DA101">sudo</span><span style="color:#DFA000"> usermod</span><span style="color:#DFA000"> -aG</span><span style="color:#DFA000"> docker</span><span style="color:#DF69BA"> $USER</span></span>
+<span class="line"></span></code></pre>
+<p><strong>make</strong>. macOS and Linux usually have it already (run <code>make --version</code> to check). On Windows, you will need to install it yourself; search online for how to install make on Windows.</p>
+<p><strong>Quartus Prime</strong>. If you do not already have Quartus, download <strong>Quartus Prime Lite Edition</strong>. It is free and needs no license. Search for &quot;Quartus Prime Lite download&quot; to find it on Altera's (formerly Intel's) FPGA software download page. When the installer asks which devices to support, select <strong>Cyclone V</strong>, the FPGA on the DE1-SoC. You can skip the others to save several GB. Leave the <strong>Programmer</strong> selected too. You need it to flash the board at your demo (<a href="#step-6-flashing-the-board">Step 6</a>), and it installs the USB-Blaster driver.</p>
+</div>
+<div class="instructions-box">
+<h2 id="directory-layout" tabindex="-1">Directory Layout</h2>
+<pre class="shiki everforest-light" style="background-color:#efece4;color:#5c6a72" tabindex="0"><code><span class="line"><span>project3_ec/</span></span>
+<span class="line"><span>  sw/                    the C programs and their build</span></span>
+<span class="line"><span>    echo.c  calc.c  pong.c</span></span>
+<span class="line"><span>    crt0.S               startup code</span></span>
+<span class="line"><span>    link.ld              memory layout</span></span>
+<span class="line"><span>    Makefile</span></span>
+<span class="line"><span>    tools/</span></span>
+<span class="line"><span>      isa_check.py       rejects instructions your processor lacks</span></span>
+<span class="line"><span>  rtl/</span></span>
+<span class="line"><span>    soc_core.v           &#x3C;-- THE ONLY FILE YOU EDIT</span></span>
+<span class="line"><span>    hart.v               &#x3C;-- you add this (plus alu.v, rf.v, decode.v, ...)</span></span>
+<span class="line"><span>    Makefile</span></span>
+<span class="line"><span>    demo.qpf  demo.qsf   the Quartus project, pins already assigned</span></span>
+<span class="line"><span>    ip/                  finished wrapper modules -- leave alone</span></span>
+<span class="line"><span></span></span></code></pre>
+<p>Everything except <code>rtl/soc_core.v</code> is finished. The memories, the I/O hardware, the board top level, the displays, the C programs and the whole toolchain are done.</p>
+</div>
+<div class="instructions-box">
+<h2 id="the-programs" tabindex="-1">The Programs</h2>
+<p>Three programs are provided, in increasing order of complexity.</p>
+<h3 id="echo-board-bring-up" tabindex="-1">Echo: Board Bring-Up</h3>
+<p><code>echo.c</code> reads the inputs, writes them to the outputs, and repeats. About 22 instructions.</p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Input</th>
+<th>Output</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>SW[9:0]</code></td>
+<td><code>LEDR[9:0]</code> (binary)</td>
+</tr>
+<tr>
+<td><code>SW[9:0]</code></td>
+<td><code>HEX2</code>–<code>HEX0</code> (same value in hex)</td>
+</tr>
+</tbody>
+</table>
+</div><p>Flip a switch: the matching LED lights and the hex digits track the value.</p>
+<h3 id="calc-a-live-4-bit-calculator" tabindex="-1">Calc: A Live 4-Bit Calculator</h3>
+<p><code>calc.c</code> is your ALU, on the board. About 72 instructions.</p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Control</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>SW[3:0]</code></td>
+<td>operand A</td>
+</tr>
+<tr>
+<td><code>SW[7:4]</code></td>
+<td>operand B</td>
+</tr>
+<tr>
+<td><code>SW[9:8]</code></td>
+<td>operation within the current bank</td>
+</tr>
+<tr>
+<td><code>KEY0</code></td>
+<td>switch banks (bank 0 = ops 0–3, bank 1 = ops 4–7)</td>
+</tr>
+</tbody>
+</table>
+</div><div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Display</th>
+<th>Shows</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>HEX5</code></td>
+<td>operation number, 0–7</td>
+</tr>
+<tr>
+<td><code>HEX4</code> / <code>HEX3</code></td>
+<td>blank</td>
+</tr>
+<tr>
+<td><code>HEX2</code>–<code>HEX0</code></td>
+<td>result, 12 bits, two's complement</td>
+</tr>
+<tr>
+<td><code>LEDR</code></td>
+<td>low 10 bits of the result, in binary</td>
+</tr>
+</tbody>
+</table>
+</div><div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Op</th>
+<th>Operation</th>
+<th>Op</th>
+<th>Operation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td><code>ADD</code> — a + b</td>
+<td>4</td>
+<td><code>XOR</code> — a ^ b</td>
+</tr>
+<tr>
+<td>1</td>
+<td><code>SUB</code> — a − b</td>
+<td>5</td>
+<td><code>SLL</code> — a &lt;&lt; b</td>
+</tr>
+<tr>
+<td>2</td>
+<td><code>AND</code> — a &amp; b</td>
+<td>6</td>
+<td><code>SRL</code> — a &gt;&gt; b (logical)</td>
+</tr>
+<tr>
+<td>3</td>
+<td><code>OR</code> — a or b</td>
+<td>7</td>
+<td><code>SLT</code> — a &lt; b (signed)</td>
+</tr>
+</tbody>
+</table>
+</div><p>There is no compute button. The result updates continuously, so you can sweep an operand and watch the output follow.</p>
+<h3 id="pong-two-player-pong-on-the-leds" tabindex="-1">Pong: Two-Player Pong on the LEDs</h3>
+<p>In <code>pong.c</code>, the ball is a single lit LED travelling along <code>LEDR</code>. When it reaches your end, press your button to hit it back; miss and the other player scores. Every successful return speeds the ball up. First to 9 wins. About 152 instructions.</p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Control</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>KEY0</code></td>
+<td>left player's paddle</td>
+</tr>
+<tr>
+<td><code>KEY3</code></td>
+<td>right player's paddle</td>
+</tr>
+<tr>
+<td><code>HEX5</code> / <code>HEX0</code></td>
+<td>left / right score</td>
+</tr>
+</tbody>
+</table>
+</div><p>On reset, and after each match, it sweeps the ball back and forth until someone presses a button to start a game; the cycle counter at that instant seeds the random number generator, so serves are not predictable.</p>
+</div>
+<div class="instructions-box">
+<h2 id="step-1-compiling-a-program" tabindex="-1">Step 1: Compiling a Program</h2>
+<p>From <code>sw/</code>, run:</p>
+<pre class="shiki everforest-light" style="background-color:#efece4;color:#5c6a72" tabindex="0"><code><span class="line"><span style="color:#8DA101">make</span><span style="color:#DFA000"> PROGRAM=echo</span><span style="color:#DFA000"> mem</span></span>
+<span class="line"></span></code></pre>
+<p>A successful build should output:</p>
+<pre class="shiki everforest-light" style="background-color:#efece4;color:#5c6a72" tabindex="0"><code><span class="line"><span>  ok  echo           text   88  rodata   0  bss   0  stack 4008</span></span>
+<span class="line"><span>      ->  build/program.mem</span></span>
+<span class="line"><span></span></span></code></pre>
+<p><code>build/program.mem</code> is the file the hardware loads.</p>
+<p>Other commands:</p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Command</th>
+<th>What it does</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>make PROGRAM=pong mem</code></td>
+<td>Builds a different program. <code>PROGRAM</code> can be <code>echo</code>, <code>calc</code> or <code>pong</code>, and the result always goes to <code>build/program.mem</code>, replacing whatever was there.</td>
+</tr>
+<tr>
+<td><code>make PROGRAM=calc disasm</code></td>
+<td>Prints the RISC-V assembly the compiler generated for that program, with the address and machine-code word of each instruction. Use it to see how your C became instructions, or to find the instruction at a PC while debugging. A copy is also saved to <code>build/calc.dis</code> whenever you build.</td>
+</tr>
+<tr>
+<td><code>make clean</code></td>
+<td>Deletes the <code>build/</code> directory and everything the build produced. Run it if a build seems stale or you want to start fresh.</td>
+</tr>
+<tr>
+<td><code>make</code></td>
+<td>With no arguments, prints this list of commands.</td>
+</tr>
+</tbody>
+</table>
+</div></div>
+<div class="instructions-box">
+<h2 id="step-2-wiring-your-processor-in" tabindex="-1">Step 2: Wiring Your Processor In</h2>
+<ol>
+<li><strong>Copy your processor into <code>rtl/</code></strong>, next to <code>soc_core.v</code>: <code>hart.v</code> and whatever it instantiates (<code>alu.v</code>, <code>rf.v</code>, <code>decode.v</code>, …). Do not modify them; these should be the same files you submitted. Do not copy <code>tb.v</code>.</li>
+<li><strong>Open <code>rtl/soc_core.v</code></strong> and fill in the <code>hart</code> instantiation. Every port is listed with a blank connection, and the table at the top of the file says what each one attaches to.</li>
+</ol>
+<p>Everything else in that file is already done: the wire declarations, the address split, and the memory and I/O instantiations. Only the processor is missing.</p>
+</div>
+<div class="instructions-box">
+<h2 id="step-3-simulating-before-you-synthesize" tabindex="-1">Step 3: Simulating Before You Synthesize</h2>
+<p>From <code>rtl/</code>, run:</p>
+<pre class="shiki everforest-light" style="background-color:#efece4;color:#5c6a72" tabindex="0"><code><span class="line"><span style="color:#8DA101">make</span><span style="color:#DFA000"> lint</span><span style="color:#939F91;font-style:italic">              # does it elaborate?</span></span>
+<span class="line"><span style="color:#8DA101">make</span><span style="color:#DFA000"> sim</span><span style="color:#DFA000"> PROG=echo</span><span style="color:#939F91;font-style:italic">     # does it actually run?</span></span>
+<span class="line"></span></code></pre>
+<p>A passing run looks like:</p>
+<pre class="shiki everforest-light" style="background-color:#efece4;color:#5c6a72" tabindex="0"><code><span class="line"><span>=== soc_tb: echo ===</span></span>
+<span class="line"><span>  ok   ledr = 00000155</span></span>
+<span class="line"><span>  ok   hex low 12 = 00000155</span></span>
+<span class="line"><span>  ok   ledr after change = 000002aa</span></span>
+<span class="line"><span>  ok   hex_en = 00000007</span></span>
+<span class="line"><span>=== 0 error(s), 123 cycles ===</span></span>
+<span class="line"><span></span></span></code></pre>
+</div>
+<div class="instructions-box">
+<h2 id="step-4-making-the-quartus-project" tabindex="-1">Step 4: Making the Quartus Project</h2>
+<p>The project is already made: <code>rtl/demo.qpf</code> and <code>rtl/demo.qsf</code>. The <code>.qsf</code> holds the device, the top-level entity (<code>de1soc_top</code>), the timing constraints, the <code>ip/</code> sources, and all 67 pin assignments with their I/O standards.</p>
+<p>Picking the device in Quartus's New Project Wizard does <strong>not</strong> assign pins; Quartus has no built-in notion of this board. So always open the provided <code>demo.qpf</code> rather than making a fresh project.</p>
+<ol>
+<li><strong>Open the project.</strong> In Quartus, <em>File → Open Project</em> and pick <code>rtl/demo.qpf</code>.</li>
+<li><strong>Add the rest of your processor.</strong> <code>soc_core.v</code> and <code>hart.v</code> are already in the project. Add every other file your <code>hart</code> instantiates with <em>Project → Add/Remove Files in Project</em> (e.g. <code>alu.v</code>, <code>rf.v</code>, <code>decode.v</code>, ...). Your files must sit in <code>rtl/</code> next to <code>soc_core.v</code>, as in <a href="#step-2-wiring-your-processor-in">Step 2</a>.</li>
+<li><strong>Put the program where Quartus can find it.</strong> The memories load <code>program.mem</code> by relative filename, so it has to sit in the project directory, <code>project3_ec/rtl/</code>, next to <code>demo.qpf</code>. Copy it from where <code>make</code> put it in <a href="#step-1-compiling-a-program">Step 1</a>:</li>
+</ol>
+<pre class="shiki everforest-light" style="background-color:#efece4;color:#5c6a72" tabindex="0"><code><span class="line"><span style="color:#8DA101">cp</span><span style="color:#F57D26"> &#x3C;</span><span style="color:#DFA000">path-to-rep</span><span style="color:#5C6A72">o</span><span style="color:#F57D26">></span><span style="color:#DFA000">/project3_ec/sw/build/program.mem</span><span style="color:#F57D26"> &#x3C;</span><span style="color:#DFA000">path-to-rep</span><span style="color:#5C6A72">o</span><span style="color:#F57D26">></span><span style="color:#DFA000">/project3_ec/rtl/program.mem</span></span>
+<span class="line"></span></code></pre>
+<p>IMPORTANT: Do not add <code>ip/soc_tb.v</code>. It is the simulation testbench; it contains delays and <code>initial</code> blocks that cannot be synthesized, and adding it breaks the compile.</p>
+<p>Note: the upper right-hand corner has a drop-down next to <em>Project Navigator</em>. From the drop-down select <code>Files</code> to see what files are included in your project. You should see <code>ip/de1soc.sdc</code>, the seven <code>ip/*.v</code> files, <code>soc_core.v</code>, <code>hart.v</code>, and the files you just added. <strong>Do not remove <code>ip/de1soc.sdc</code>.</strong> It is the timing constraints file, and it tells the Timing Analyzer that your processor runs on the divided 12.5 MHz clock, not the board's 50 MHz oscillator. Without it the Fmax you read in <a href="#step-5-compiling-in-quartus">Step 5</a> is wrong.</p>
+</div>
+<div class="instructions-box">
+<h2 id="step-5-compiling-in-quartus" tabindex="-1">Step 5: Compiling in Quartus</h2>
+<p><em>Processing → Start Compilation</em>. Expect anywhere from 5-20 minutes.</p>
+<p>A successful compile ends with warnings but no errors.</p>
+<h3 id="read-the-timing-report" tabindex="-1">Read the Timing Report</h3>
+<p><em>Compilation Report → Timing Analyzer → Slow 1100mV 85C Model → Fmax Summary.</em> This is the fastest your processor could run.</p>
+<p>Find the <code>cpu_clk</code> row and compare it against 12.5 MHz, which is what the divider produces. If Fmax is <strong>above 12.5 MHz</strong>, the design meets timing and you don't need to change anything. If it is <strong>below 12.5 MHz</strong> (the Setup Summary will also show negative slack for <code>cpu_clk</code>), the processor will not run reliably. Set <code>CLK_DIV_LOG2 = 3</code> in <code>ip/de1soc_top.v</code> for 6.25 MHz, change <code>-divide_by</code> to 8 and the counter bit to <code>cnt[2]</code> in <code>ip/de1soc.sdc</code>, then recompile.</p>
+<h3 id="find-your-critical-path" tabindex="-1">Find Your Critical Path</h3>
+<p>The critical path is the slowest register-to-register path. It is what sets your Fmax.</p>
+<ol>
+<li><em>Tools → Timing Analyzer</em>.</li>
+<li>In the <strong>Tasks</strong> pane, under <em>Custom Reports</em>, double-click <strong>Report Timing…</strong>. The Timing Analyzer builds its netlist automatically the first time.</li>
+<li>Set <strong>From clock</strong> and <strong>To clock</strong> to <code>cpu_clk</code>, and click <strong>Report Timing</strong>.</li>
+<li>Click the top path. The <strong>Data Path</strong> tab lists every node the signal passes through, with the delay of each, from the launching register to the capturing one.</li>
+</ol>
+<p>The node names follow your module hierarchy, for example <code>soc_core:u_core|hart:u_hart|pc[3]</code> or <code>soc_core:u_core|dmem:u_dmem|mem[...]</code>. Match them to the blocks on your schematic.</p>
+<h3 id="see-what-your-design-became" tabindex="-1">See What Your Design Became</h3>
+<p>The fitter report shows what Quartus actually built your design from. Open <em>Compilation Report → Fitter → Resource Section</em>.</p>
+<p><strong>Resource Usage Summary</strong> gives totals for the whole design. Note these:</p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Line</th>
+<th>What it counts</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Logic utilization (ALMs needed / total ALMs on device)</td>
+<td>general-purpose logic cells used</td>
+</tr>
+<tr>
+<td>Dedicated logic registers</td>
+<td>flip-flops</td>
+</tr>
+<tr>
+<td>M10K blocks</td>
+<td>dedicated block RAMs</td>
+</tr>
+<tr>
+<td>Total MLAB memory bits</td>
+<td>logic cells used as small RAMs</td>
+</tr>
+</tbody>
+</table>
+</div><p><strong>Resource Utilization by Entity</strong> gives the same counts, broken down by module. Expand the tree to find a row for each part of your design: <code>hart</code> and everything inside it (your <code>rf</code>, <code>alu</code>, …), plus <code>imem</code>, <code>dmem</code> and <code>mmio</code>. Compare the rows. Which module is the largest, and does that match what you expected?</p>
+<p>To see it as a picture, <em>Tools → Netlist Viewers → RTL Viewer</em> shows your design as a schematic of the modules you wrote. <em>Technology Map Viewer</em> shows what they became on the FPGA.</p>
+</div>
+<div class="instructions-box">
+<h2 id="step-6-flashing-the-board" tabindex="-1">Step 6: Flashing the Board</h2>
+<p>You do this live at your demo (see <a href="#the-demo">The Demo</a>), from your laptop, with our board. You cannot try it beforehand, so read through the steps now and do the setup that needs no board: install the Programmer and USB-Blaster driver, and on Linux, add the udev rule in step 3.</p>
+<ol>
+<li>Connect the <strong>USB-Blaster II</strong> port (the mini-USB nearest the power jack) and power the board on.</li>
+<li><em>Tools → Programmer</em>.</li>
+<li><strong>Hardware Setup…</strong> → <strong>DE-SoC</strong> → Close. If nothing is listed, the driver is not installed or the board is off.</li>
+<li>Mode: <strong>JTAG</strong>.</li>
+<li>Click <strong>Auto Detect</strong>; if it asks for a device, pick <code>5CSEMA5</code>. You should now see two chips: SOCVHPS → 5CSEMA5.</li>
+<li>Click the <strong><code>5CSEMA5</code></strong> row, then <strong>Change File…</strong> and pick your <code>.sof</code>.</li>
+<li>Tick <strong>Program/Configure</strong> on that row.</li>
+<li><strong>Start</strong>. The bar should reach 100% (Successful).</li>
+</ol>
+<p>The design runs as soon as configuration finishes.</p>
+<p>Note: on Linux, the board will not be listed in step 3 until you give your user access to the USB-Blaster. Do this once, before your demo:</p>
+<pre class="shiki everforest-light" style="background-color:#efece4;color:#5c6a72" tabindex="0"><code><span class="line"><span style="color:#DFA000">echo</span><span style="color:#8DA101"> 'SUBSYSTEM=="usb", ATTR{idVendor}=="09fb", MODE="0666"'</span><span style="color:#F57D26"> |</span><span style="color:#8DA101"> sudo</span><span style="color:#DFA000"> tee</span><span style="color:#DFA000"> /etc/udev/rules.d/51-usbblaster.rules</span></span>
+<span class="line"><span style="color:#8DA101">sudo</span><span style="color:#DFA000"> udevadm</span><span style="color:#DFA000"> control</span><span style="color:#DFA000"> --reload-rules</span></span>
+<span class="line"></span></code></pre>
+<p>If it still does not show up, unplug and replug the board, or run <code>killall jtagd</code> and reopen the Programmer.</p>
+</div>
+<div class="instructions-box">
+<h2 id="running-a-different-program" tabindex="-1">Running a Different Program</h2>
+<pre class="shiki everforest-light" style="background-color:#efece4;color:#5c6a72" tabindex="0"><code><span class="line"><span style="color:#DFA000">cd</span><span style="color:#DFA000"> ../sw</span><span style="color:#5C6A72"> &#x26;&#x26; </span><span style="color:#8DA101">make</span><span style="color:#DFA000"> PROGRAM=pong</span><span style="color:#DFA000"> mem</span></span>
+<span class="line"><span style="color:#8DA101">cp</span><span style="color:#DFA000"> build/program.mem</span><span style="color:#DFA000"> ../rtl/</span></span>
+<span class="line"></span></code></pre>
+<p>Then <strong>recompile in Quartus</strong>.</p>
+<p>You have to recompile. The program is not data the board loads at startup; it was baked into the bitstream as the initial contents of the instruction memory, so changing a single instruction means re-synthesizing the entire design.</p>
+<p>Each compile overwrites <code>demo.sof</code>. To bring more than one program to your demo, copy each <code>.sof</code> to its own name (for example <code>echo.sof</code>, <code>pong.sof</code>) after compiling it.</p>
+</div>
+<div class="instructions-box">
+<h2 id="writing-your-own-program" tabindex="-1">Writing Your Own Program</h2>
+<p>You are encouraged to. Drop a <code>.c</code> file in <code>sw/</code> and build it:</p>
+<pre class="shiki everforest-light" style="background-color:#efece4;color:#5c6a72" tabindex="0"><code><span class="line"><span style="color:#8DA101">make</span><span style="color:#DFA000"> PROGRAM=yourprogram</span><span style="color:#DFA000"> mem</span></span>
+<span class="line"></span></code></pre>
+<p>The constraint is that your processor implements <strong>37 instructions</strong> (the RV32I base set minus a few pieces), so not every legal C program will run on it.</p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Do not use</th>
+<th>Why</th>
+<th>Use instead</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>*</code>, <code>/</code>, <code>%</code></td>
+<td>no multiply or divide instructions</td>
+<td>shift-and-add; repeated subtraction</td>
+</tr>
+<tr>
+<td><code>long long</code>, <code>float</code>, <code>double</code></td>
+<td>no 64-bit or floating-point support</td>
+<td>32-bit <code>int</code> / <code>unsigned</code></td>
+</tr>
+<tr>
+<td><code>printf</code>, <code>malloc</code>, the C library</td>
+<td>needs <code>ecall</code>, which does not exist here</td>
+<td>memory-mapped I/O</td>
+</tr>
+<tr>
+<td><code>__builtin_popcount</code>, <code>__builtin_clz</code>, …</td>
+<td>become library calls</td>
+<td>write the loop yourself</td>
+</tr>
+<tr>
+<td>initialized global variables</td>
+<td>reset does not reload memory, so they come back stale</td>
+<td><code>const</code> globals, or initialize at the top of <code>main</code></td>
+</tr>
+</tbody>
+</table>
+</div><p>If you use <code>*</code> or <code>/</code>, the build fails with a clear message rather than producing a program that misbehaves on the board:</p>
+<pre class="shiki everforest-light" style="background-color:#efece4;color:#5c6a72" tabindex="0"><code><span class="line"><span>ld: undefined reference to `__mulsi3'</span></span>
+<span class="line"><span>ld: undefined reference to `__udivsi3'</span></span>
+<span class="line"><span></span></span></code></pre>
+<p>That is the linker telling you the compiler wanted a multiply routine your processor does not have.</p>
+<p>Note: multiplying by a constant sometimes works and sometimes does not, because the compiler may turn <code>x * 8</code> into a shift but <code>x * 12500</code> into a <code>__mulsi3</code> call.</p>
+<p>Byte and half-word access does work (<code>lb</code>, <code>lbu</code>, <code>lh</code>, <code>lhu</code>, <code>sb</code>, <code>sh</code>), so <code>char</code> arrays and strings are fine.</p>
+<p>Why no initialized globals: pressing reset restarts your processor but does not reload memory, so a mutable global would come back holding whatever the previous run left in it. <code>crt0</code> cannot restore it, because there is no separate copy to restore from. Constants go in <code>.rodata</code>, which is never written; mutable state goes in <code>.bss</code> or a local and is set up at runtime. The build enforces this.</p>
+</div>
+<div class="instructions-box">
+<h2 id="reference" tabindex="-1">Reference</h2>
+<h3 id="memory-map" tabindex="-1">Memory Map</h3>
+<p>One flat 4 KB image, loaded into <strong>both</strong> memories. Each ignores the region it never addresses, which is why one file serves both and <code>crt0</code> needs no <code>.data</code> copy loop.</p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Range</th>
+<th>Contents</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>0x0000_0000</code>–<code>0x0000_03FF</code></td>
+<td><code>.text</code>, fetched through the imem port</td>
+</tr>
+<tr>
+<td><code>0x0000_0400</code>–<code>0x0000_0EFF</code></td>
+<td><code>.rodata</code>, <code>.bss</code>, reached through the dmem port</td>
+</tr>
+<tr>
+<td><code>0x0000_0F00</code>–<code>0x0000_0FFC</code></td>
+<td>stack, grows down</td>
+</tr>
+</tbody>
+</table>
+</div><h3 id="peripherals" tabindex="-1">Peripherals</h3>
+<p>Decoded on address bit 31: anything at <code>0x8000_0000</code> and above is I/O.</p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Address</th>
+<th>Register</th>
+<th>Dir</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>0x8000_0000</code></td>
+<td><code>LEDR</code></td>
+<td>W</td>
+<td>10 bits</td>
+</tr>
+<tr>
+<td><code>0x8000_0004</code></td>
+<td><code>SW</code></td>
+<td>R</td>
+<td>10 bits, synchronized</td>
+</tr>
+<tr>
+<td><code>0x8000_0008</code></td>
+<td><code>KEY</code></td>
+<td>R</td>
+<td>4 bits, active high</td>
+</tr>
+<tr>
+<td><code>0x8000_000C</code></td>
+<td><code>KEY_EDGE</code></td>
+<td>R</td>
+<td>sticky press latch</td>
+</tr>
+<tr>
+<td><code>0x8000_0010</code></td>
+<td><code>KEY_ACK</code></td>
+<td>W</td>
+<td>write 1 to clear a latch bit</td>
+</tr>
+<tr>
+<td><code>0x8000_0014</code></td>
+<td><code>HEX_VAL</code></td>
+<td>W</td>
+<td>24 bits → six hex digits</td>
+</tr>
+<tr>
+<td><code>0x8000_0020</code></td>
+<td><code>HEX_EN</code></td>
+<td>W</td>
+<td>6 bits, per-digit blanking</td>
+</tr>
+<tr>
+<td><code>0x8000_0024</code></td>
+<td><code>CYCLES</code></td>
+<td>R</td>
+<td>free-running cycle counter</td>
+</tr>
+<tr>
+<td><code>0x8000_0028</code></td>
+<td><code>INSTRET</code></td>
+<td>R</td>
+<td>retired instruction counter</td>
+</tr>
+</tbody>
+</table>
+</div><p>The counters are memory-mapped because this ISA has no CSRs; there is no <code>rdcycle</code> to read.</p>
+<p><code>KEY_EDGE</code> is cleared by an explicit write to <code>KEY_ACK</code> rather than by the read itself. Read-to-clear would be safe on a single-cycle processor but would drop presses on a pipelined one that can replay a load.</p>
+<h3 id="ip-modules" tabindex="-1">IP Modules</h3>
+<p>The files in <code>ip/</code> are finished. Do not modify them.</p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>File</th>
+<th>Role</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>de1soc_top.v</code></td>
+<td>Board top level: pins, reset, clock, LED override, displays</td>
+</tr>
+<tr>
+<td><code>imem.v</code></td>
+<td>4 KB instruction memory, combinational read</td>
+</tr>
+<tr>
+<td><code>dmem.v</code></td>
+<td>4 KB data memory, combinational read, byte-writable</td>
+</tr>
+<tr>
+<td><code>mmio.v</code></td>
+<td>Switches, buttons, LEDs, displays, counters</td>
+</tr>
+<tr>
+<td><code>hex7seg.v</code></td>
+<td>Hex digit → seven segments</td>
+</tr>
+<tr>
+<td><code>clkdiv.v</code></td>
+<td>50 MHz → 12.5 MHz CPU clock, freezes on halt</td>
+</tr>
+<tr>
+<td><code>halt_ctrl.v</code></td>
+<td>Watches your retire interface for <code>ebreak</code> and traps</td>
+</tr>
+<tr>
+<td><code>soc_tb.v</code></td>
+<td>The testbench. <strong>Simulation only</strong>; never add to Quartus</td>
+</tr>
+<tr>
+<td><code>de1soc.sdc</code></td>
+<td>Timing constraints; add to Quartus</td>
+</tr>
+</tbody>
+</table>
+</div><h3 id="board-behavior" tabindex="-1">Board Behavior</h3>
+<ol>
+<li><strong>Reset</strong> is KEY1. None of the programs use it, so it never gets in the way of a program's own buttons.</li>
+<li><strong>All LEDs on, steady</strong>: your program executed <code>ebreak</code> and the CPU stopped. Normal for a program that ends.</li>
+<li><strong>All LEDs blinking</strong>: your processor took a trap (illegal instruction, misaligned load/store, or misaligned branch target). These programs do none of those, so blinking points at the processor, not the software.</li>
+</ol>
+</div>
+<div class="instructions-box">
+<h2 id="troubleshooting" tabindex="-1">Troubleshooting</h2>
+<h3 id="software-build" tabindex="-1">Software Build</h3>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Symptom</th>
+<th>Cause</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>undefined reference to '__mulsi3'</code> / <code>'__udivsi3'</code></td>
+<td>you used <code>*</code>, <code>/</code> or <code>%</code></td>
+</tr>
+<tr>
+<td><code>ISA CHECK FAILED</code></td>
+<td>an instruction your processor does not implement; the message names it</td>
+</tr>
+<tr>
+<td><code>.data is N bytes, must be 0</code></td>
+<td>initialized global; make it <code>const</code> or set it inside <code>main</code></td>
+</tr>
+<tr>
+<td><code>region 'RAM' overflowed</code></td>
+<td>program too big; check <code>-Os</code> is still there, shrink arrays</td>
+</tr>
+<tr>
+<td><code>warning: ... LOAD segment with RWX permissions</code></td>
+<td>expected and harmless</td>
+</tr>
+</tbody>
+</table>
+</div><h3 id="simulation" tabindex="-1">Simulation</h3>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Symptom</th>
+<th>Cause</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>FAIL</code> lines, or outputs all <code>x</code></td>
+<td>a connection left blank in <code>soc_core.v</code></td>
+</tr>
+<tr>
+<td><code>Unknown module type: hart</code></td>
+<td><code>hart.v</code> not copied into <code>rtl/</code></td>
+</tr>
+<tr>
+<td><code>Cannot connect to the Docker daemon</code></td>
+<td>Docker Desktop is not running (Linux: the Docker service is not running; run <code>sudo systemctl start docker</code>)</td>
+</tr>
+<tr>
+<td><code>permission denied while trying to connect to the Docker daemon socket</code></td>
+<td>Linux: you are not in the <code>docker</code> group; see <a href="#requirements">Requirements</a></td>
+</tr>
+<tr>
+<td><code>make: command not found</code></td>
+<td>make is not installed; see <a href="#requirements">Requirements</a></td>
+</tr>
+</tbody>
+</table>
+</div><h3 id="quartus" tabindex="-1">Quartus</h3>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Symptom</th>
+<th>Cause</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Top-level entity &quot;demo&quot; is undefined</code></td>
+<td>you made a new project instead of opening the provided <code>demo.qpf</code>; open that one (or set the top-level entity to <code>de1soc_top</code>)</td>
+</tr>
+<tr>
+<td>errors about <code>#</code> delays or <code>initial</code></td>
+<td>you added <code>ip/soc_tb.v</code>; remove it</td>
+</tr>
+<tr>
+<td><code>Can't elaborate user hierarchy</code> / unknown module under <code>hart</code></td>
+<td>one of your processor files is not in the project; add it (<a href="#step-4-making-the-quartus-project">Step 4</a>)</td>
+</tr>
+<tr>
+<td><code>Can't open file hart.v</code></td>
+<td><code>hart.v</code> not copied into <code>rtl/</code></td>
+</tr>
+<tr>
+<td>compiles fine, board completely dead</td>
+<td>pins not assigned; did you open the provided <code>demo.qpf</code>, or make a fresh project?</td>
+</tr>
+<tr>
+<td>compiles fine, displays blank</td>
+<td><code>program.mem</code> missing from the project directory</td>
+</tr>
+<tr>
+<td>huge timing violations, Fmax nonsense</td>
+<td><code>ip/de1soc.sdc</code> was removed from the project; add it back</td>
+</tr>
+</tbody>
+</table>
+</div><h3 id="board" tabindex="-1">Board</h3>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Symptom</th>
+<th>Cause</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Can't find hardware</code> in the Programmer</td>
+<td>board off, wrong USB port (use the one by the power jack), or driver not installed (Linux: udev rule missing; see <a href="#step-6-flashing-the-board">Step 6</a>)</td>
+</tr>
+<tr>
+<td>Programmer succeeds, nothing happens</td>
+<td><code>.sof</code> attached to <code>SOCVHPS</code> instead of the <code>5CSEMA5</code> row</td>
+</tr>
+<tr>
+<td>Nothing works at all</td>
+<td>load <code>echo</code> first; if that fails it is the wiring or the board setup, not the program</td>
+</tr>
+</tbody>
+</table>
+</div></div>
+
+
+                        
+                        <nav class="wa-docs-prev-next">
+                            
+                            <a href="/project3/"><span class="arrow" aria-hidden="true">&lsaquo;</span> Project 3: Single-Cycle Processor</a>
+                            
+                            
+                        </nav>
+                        
+                    </article>
+
+                    
+                    <nav class="wa-docs-toc" aria-label="Table of Contents">
+                        <div class="h">Table of Contents</div>
+                        <ul class="wa-docs-toc-list">
+                            
+                            
+                            <li><a href="#project-introduction">Project Introduction</a></li>
+                            
+                            
+                            
+                            <li>
+                                <details>
+                                    <summary><a href="#the-demo">The Demo</a></summary>
+                                    <ul class="wa-docs-toc-sublist">
+                                    
+                                        <li><a href="#what-to-bring">What to Bring</a></li>
+                                    
+                                        <li><a href="#before-you-come">Before You Come</a></li>
+                                    
+                                        <li><a href="#at-the-demo">At the Demo</a></li>
+                                    
+                                        <li><a href="#what-we-will-ask-about">What We Will Ask About</a></li>
+                                    
+                                    </ul>
+                                </details>
+                            </li>
+                            
+                            
+                            
+                            <li><a href="#requirements">Requirements</a></li>
+                            
+                            
+                            
+                            <li><a href="#directory-layout">Directory Layout</a></li>
+                            
+                            
+                            
+                            <li>
+                                <details>
+                                    <summary><a href="#the-programs">The Programs</a></summary>
+                                    <ul class="wa-docs-toc-sublist">
+                                    
+                                        <li><a href="#echo-board-bring-up">Echo: Board Bring-Up</a></li>
+                                    
+                                        <li><a href="#calc-a-live-4-bit-calculator">Calc: A Live 4-Bit Calculator</a></li>
+                                    
+                                        <li><a href="#pong-two-player-pong-on-the-leds">Pong: Two-Player Pong on the LEDs</a></li>
+                                    
+                                    </ul>
+                                </details>
+                            </li>
+                            
+                            
+                            
+                            <li><a href="#step-1-compiling-a-program">Step 1: Compiling a Program</a></li>
+                            
+                            
+                            
+                            <li><a href="#step-2-wiring-your-processor-in">Step 2: Wiring Your Processor In</a></li>
+                            
+                            
+                            
+                            <li><a href="#step-3-simulating-before-you-synthesize">Step 3: Simulating Before You Synthesize</a></li>
+                            
+                            
+                            
+                            <li><a href="#step-4-making-the-quartus-project">Step 4: Making the Quartus Project</a></li>
+                            
+                            
+                            
+                            <li>
+                                <details>
+                                    <summary><a href="#step-5-compiling-in-quartus">Step 5: Compiling in Quartus</a></summary>
+                                    <ul class="wa-docs-toc-sublist">
+                                    
+                                        <li><a href="#read-the-timing-report">Read the Timing Report</a></li>
+                                    
+                                        <li><a href="#find-your-critical-path">Find Your Critical Path</a></li>
+                                    
+                                        <li><a href="#see-what-your-design-became">See What Your Design Became</a></li>
+                                    
+                                    </ul>
+                                </details>
+                            </li>
+                            
+                            
+                            
+                            <li><a href="#step-6-flashing-the-board">Step 6: Flashing the Board</a></li>
+                            
+                            
+                            
+                            <li><a href="#running-a-different-program">Running a Different Program</a></li>
+                            
+                            
+                            
+                            <li><a href="#writing-your-own-program">Writing Your Own Program</a></li>
+                            
+                            
+                            
+                            <li>
+                                <details>
+                                    <summary><a href="#reference">Reference</a></summary>
+                                    <ul class="wa-docs-toc-sublist">
+                                    
+                                        <li><a href="#memory-map">Memory Map</a></li>
+                                    
+                                        <li><a href="#peripherals">Peripherals</a></li>
+                                    
+                                        <li><a href="#ip-modules">IP Modules</a></li>
+                                    
+                                        <li><a href="#board-behavior">Board Behavior</a></li>
+                                    
+                                    </ul>
+                                </details>
+                            </li>
+                            
+                            
+                            
+                            <li>
+                                <details>
+                                    <summary><a href="#troubleshooting">Troubleshooting</a></summary>
+                                    <ul class="wa-docs-toc-sublist">
+                                    
+                                        <li><a href="#software-build">Software Build</a></li>
+                                    
+                                        <li><a href="#simulation">Simulation</a></li>
+                                    
+                                        <li><a href="#quartus">Quartus</a></li>
+                                    
+                                        <li><a href="#board">Board</a></li>
+                                    
+                                    </ul>
+                                </details>
+                            </li>
+                            
+                            
+                        </ul>
+                    </nav>
+                    
+                </div>
+
+                <footer class="wa-docs-footer">
+                    <p>2026 ECE 552 Course Staff, University of Wisconsin-Madison</p>
+                </footer>
+            </main>
+        </div>
+
+        
+        <script>
+            (function () {
+                var btn = document.querySelector('[data-disclosure]');
+                var nav = document.getElementById('wa-docs-rail-nav');
+                if (!btn || !nav) return;
+                btn.addEventListener('click', function () {
+                    var hidden = nav.hasAttribute('data-mobile-hidden');
+                    if (hidden) {
+                        nav.removeAttribute('data-mobile-hidden');
+                    } else {
+                        nav.setAttribute('data-mobile-hidden', '');
+                    }
+                    btn.setAttribute('aria-expanded', hidden ? 'true' : 'false');
+                    btn.querySelector('.wa-docs-disclosure-icon').textContent = hidden ? '×' : '+';
+                });
+            })();
+        </script>
+    </body>
+</html>
