@@ -1,0 +1,229 @@
+
+
+
+
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Project 4: Basic Pipelined Processor</title>
+        <link rel="stylesheet" href="/styles/site.css">
+
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Red+Hat+Display:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,500;1,600&family=Red+Hat+Mono:wght@300;400;500;600&display=swap" rel="stylesheet">
+    </head>
+
+    <body>
+        <div class="wa-docs-shell">
+            <aside class="wa-docs-rail">
+                
+                <div class="wa-docs-rail-head">
+                    <a class="wa-wordmark" href="/"><span class="wisc">ECE</span><span class="arch">552</span></a>
+                    <span class="wa-docs-rail-version">Fall 2026</span>
+                </div>
+
+                
+                <button type="button" class="wa-docs-disclosure-summary" aria-expanded="false" aria-controls="wa-docs-rail-nav" data-disclosure>
+                    <span class="wa-docs-disclosure-label">Project 4: Basic Pipelined Processor</span>
+                    <span class="wa-docs-disclosure-icon" aria-hidden="true">+</span>
+                </button>
+
+                <nav id="wa-docs-rail-nav" class="wa-docs-rail-nav" aria-label="Project 4: Basic Pipelined Processor" data-mobile-hidden>
+                    
+                    
+                    <a class="wa-docs-rail-link" href="/project1/">Project 1: RISC-V Assembly Language</a>
+                    
+                    <a class="wa-docs-rail-link" href="/project2/">Project 2: Digital Design and Debugging</a>
+                    
+                    <a class="wa-docs-rail-link" href="/project3/">Project 3: Single-Cycle Processor</a>
+                    
+                    <a class="wa-docs-rail-link" href="/project3_ec/">Project 3: Extra Credit - FPGA Demo</a>
+                    
+                    <a class="wa-docs-rail-link is-active" href="/project4/">Project 4: Basic Pipelined Processor</a>
+                    
+                    <a class="wa-docs-rail-link" href="/schedule/">Project Schedule</a>
+                    <a class="wa-docs-rail-link" href="/rules/">Verilog Rules</a>
+                    <a class="wa-docs-rail-link" href="/html/reference.html">Reference Materials</a>
+                </nav>
+            </aside>
+
+            <main class="wa-docs-main">
+                <div class="wa-docs-topbar">
+                    <div class="wa-docs-breadcrumb">
+                        
+                        <span class="crumb-mono">ECE 552</span>
+                        <span class="crumb-sep" aria-hidden="true">/</span>
+                        
+                        <span class="crumb-cur">Project 4: Basic Pipelined Processor</span>
+                    </div>
+                    
+                    <div class="wa-docs-topbar-right">
+                        <a class="wa-docs-topbar-link" href="/">Back to Course Home</a>
+                    </div>
+                    
+                </div>
+
+                <div class="wa-docs-content">
+                    <article class="wa-docs-article">
+                        
+                        <h1 class="wa-docs-h1">Project 4: Basic Pipelined Processor</h1>
+                        <p class="wa-docs-page-tag">UW—Madison ECE 552: Fall 2026</p>
+
+                        <div class="instructions-box">
+<h2 id="project-introduction" tabindex="-1">Project Introduction</h2>
+<p>In this project phase, you will create a fully functional pipelined processor without optimizations, implementing the RISC-V RV32I ISA. It is recommended to start this project early.</p>
+<p>Implementations must be created using Verilog; SystemVerilog will not be allowed and will result in a grade of 0 for Problem 2 if used. This assignment is designed to be completed in a group of 2-3. Collaboration between groups is not permitted. IMPORTANT: Make your final submissions in your groups on Gradescope. If you do not, the teaching staff will have to do this manually.</p>
+<p>Generative artificial intelligence (e.g. ChatGPT) is permitted for this assignment; however, LLMs generally struggle with this type of hardware design work, and overly relying on them may make this project phase and subsequent phases significantly harder to complete.</p>
+<p>This project will be worth 7.5% of your final course grade. The automated tests on Gradescope comprise the majority of the points. The schematic is worth a fair portion.</p>
+<p>All material is available in the <a href="https://github.com/wiscarch/riscv32i-arch-course-starter-fa26/tree/main/project4-and-5">Project 4 and 5 repository</a> on GitHub. You can clone the repository locally or on a CSL machine.</p>
+<p>If there are any issues with Gradescope or the files provided, please post on Piazza rather than emailing. If you are having difficulty with this project, office hours are held several times a week where assistance is available.</p>
+<p>Good luck!</p>
+</div>
+<div class="instructions-box">
+<h2 id="important-note" tabindex="-1">Important Note</h2>
+<p>DO NOT try to skip steps and add the optimizations from Project 5 before getting your processor to work with stalls. While it is possible to implement the optimizations first and elide the stalling phase since the optimizations replace the stalling anyway, it is a nightmare to debug. Both of these projects are released at the same time, and your solution from Project 5 will be able to pass the tests for Project 4, but it is much easier to complete these in order without skipping steps.</p>
+</div>
+<div class="instructions-box">
+<h2 id="problem-1-schematic" tabindex="-1">Problem 1: Schematic</h2>
+<p>Update your schematic from Project 3 to include the elements required to pipeline your processor (e.g. pipeline registers).</p>
+<p>Since labelling the bit width of every signal (with a width of greater than 1) for every pipeline stage is tedious, you may label the bit width in the first stage in which the signal appears and represent the width of that signal (if greater than 1) with just a slash in subsequent stages.</p>
+<p>The textbook is a good resource for this problem.</p>
+</div>
+<div class="instructions-box">
+<h2 id="problem-2-pipeline-implementation" tabindex="-1">Problem 2: Pipeline Implementation</h2>
+<p>Update your processor to be pipelined. In order to get all of the points for this project, you must pass accuracy tests and do not need to worry about CPI. Project 5, which was released at the same time as this project, requires you to pass both accuracy and CPI tests.</p>
+<p>Therefore, what you should be doing for this project is getting your processor to work with stalls in the case of data or control hazards.</p>
+<p>Again, all material is available in the <a href="https://github.com/wiscarch/riscv32i-arch-course-starter-fa26/tree/main/project4-and-5">Project 4 and 5 repository</a> on GitHub.</p>
+<h3 id="step-1-add-pipeline-registers" tabindex="-1">Step 1: Add Pipeline Registers</h3>
+<p>Since in this project the processor does not include stalling or forwarding logic, in order to handle RAW dependencies, you need to modify the program to insert <code>nop</code> instructions. A quick note on register file bypassing: Recall from Project 2, you implemented bypassing logic in the register file. Starting from this step, you can enable it by setting <code>BYPASS_EN</code> to 1 when instantiating the register file. If it is easier for you to reason about pipelining without enabling it, you can include the extra stall cycle and pipeline the processor without bypassing first.</p>
+<p>Consider the following simple program:</p>
+<pre class="shiki everforest-light" style="background-color:#efece4;color:#5c6a72" tabindex="0"><code><span class="line"><span style="color:#8DA101">L0</span><span style="color:#5C6A72">: addi x7, x0, </span><span style="color:#DF69BA">0xf</span></span>
+<span class="line"><span style="color:#8DA101">L1</span><span style="color:#5C6A72">: addi x1, x0, </span><span style="color:#DF69BA">10</span></span>
+<span class="line"><span style="color:#8DA101">L2</span><span style="color:#5C6A72">: addi x2, x1, </span><span style="color:#DF69BA">1</span></span>
+<span class="line"><span style="color:#8DA101">L3</span><span style="color:#5C6A72">: addi x3, x2, </span><span style="color:#DF69BA">1</span><span style="color:#5C6A72"> </span></span>
+<span class="line"><span style="color:#8DA101">L4</span><span style="color:#5C6A72">: addi x4, x3, </span><span style="color:#DF69BA">1</span></span>
+<span class="line"><span style="color:#8DA101">L5</span><span style="color:#5C6A72">: addi x5, x4, </span><span style="color:#DF69BA">1</span></span>
+<span class="line"><span style="color:#8DA101">L6</span><span style="color:#5C6A72">: addi x6, x5, </span><span style="color:#DF69BA">1</span></span>
+<span class="line"><span style="color:#8DA101">L7</span><span style="color:#5C6A72">: beq x6, x7, L10</span></span>
+<span class="line"><span style="color:#8DA101">L8</span><span style="color:#5C6A72">: lui a0, </span><span style="color:#DF69BA">0xdead</span></span>
+<span class="line"><span style="color:#8DA101">L9</span><span style="color:#5C6A72">: ebreak</span></span>
+<span class="line"><span style="color:#8DA101">L10</span><span style="color:#5C6A72">: lui a0, </span><span style="color:#DF69BA">0x1</span></span>
+<span class="line"><span style="color:#8DA101">L11</span><span style="color:#5C6A72">: ebreak</span></span>
+<span class="line"></span></code></pre>
+<p>How would you modify this program so that it is executed correctly on your simplistic pipelined processor (no forwarding, no hazard detection, register file bypassing enabled, branch resolved in EX)? More specifically, where and how many <code>nop</code> instructions do you need to add? It's a good idea to draw pipeline diagrams when determining <code>nop</code> quantities, and when conceptualizing pipelining in general.</p>
+<p>Once you insert <code>nop</code> instructions, take this modified program and run it with your simplistic pipeline processor to verify that it is executed correctly. You are also encouraged to write more programs like above with various dependencies. For example, also consider a RAW dependency established by load instructions and how that would be handled. These programs can also be used as simple test cases in the next step.</p>
+<p>This version of the processor will NOT pass the tests on Gradescope. In order to pass the tests, you must implement stalls using a hazard detection unit.</p>
+<h3 id="step-2-add-hazard-detection-unit" tabindex="-1">Step 2: Add Hazard Detection Unit</h3>
+<p>Now that your pipelined processor is working correctly with programs explicitly annotated with nop instructions, the next step is to implement a hazard detection unit that identifies all the dependencies and sends control signals to the pipeline registers. If an instruction is dependent on one or multiple older instructions in flight, stall it in the decode (ID) stage. Think about how you would implement a stall/pipeline bubble in your pipeline.</p>
+<p>Once you have correctly implemented the hazard detection unit and integrated it into your processor, remove all the nop instructions you inserted into the test program previously and run it again on your processor. Verify that it still behaves as expected.</p>
+<p>Note that you will need to update the retire interface (o_retire_*) provided in hart.v to retire signals in the writeback stage.</p>
+<h3 id="resources" tabindex="-1">Resources</h3>
+<p>The <a href="../html/reference.html">RISCV-32I specification document</a> is the primary document to reference how instructions are implemented.</p>
+<p>The <a href="../html/reference.html">reference sheet</a> is helpful when writing programs or as a quick reference.</p>
+<p>You may find <a href="https://ripes.dk/">this simulator</a> helpful for visualizing how your processor should execute, and for verifying functional correctness and performance.</p>
+<p>Using <a href="https://luplab.gitlab.io/rvcodecjs/">this decoder</a> to assemble RISC-V instructions is also recommended for testing and examining instructions when debugging.</p>
+<h3 id="gradescope" tabindex="-1">Gradescope</h3>
+<p>Submit your code to Gradescope as often as desired to verify your processor. Verilog coding rules are enforced for this project. A centralized list of these rules can be found <a href="../rules">here</a>. The rule-checking script will run every time the processor is submitted, first checking for compiler errors, then disallowed constructs. Once a submission passes the rules check, a trace comparison will be performed between the submitted processor and the reference implementation. You can run the exact same checker locally before submitting -- <code>ece552 validate -w *.v</code> -- see the starter repository's <code>python-ece552/README.md</code> for setup.</p>
+</div>
+<div class="instructions-box">
+<h2 id="submission-instructions" tabindex="-1">Submission Instructions</h2>
+<p>Submit the following files to the appropriate Gradescope assignment:</p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Deliverable</th>
+<th>Points</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>schematic.pdf</td>
+<td>20</td>
+<td>Graded manually, after the deadline. See Problem 1.</td>
+</tr>
+<tr>
+<td>All Verilog files required for <br>your processor to run (no folder hierarchy)</td>
+<td>125</td>
+<td>Autograded. If it is used in your design, include it.<br>See Problem 2.</td>
+</tr>
+<tr>
+<td><code>project4.txt</code></td>
+<td>0</td>
+<td>Graded manually, after the deadline. Submission Template<br>[Group Member 1]: Name<br>[Group Member 2]: Name<br>[Group Member 3]: Name</td>
+</tr>
+</tbody>
+</table>
+</div><p>Filenames must match exactly. Please double check to ensure that you have submitted all of the required files.</p>
+<p>This project will be worth 7.5% of your final course grade. <strong>Gradescope will only show your autograded Verilog score immediately -- schematic and free-response points aren't reflected until they're graded manually, after the deadline.</strong></p>
+</div>
+
+
+                        
+                        <nav class="wa-docs-prev-next">
+                            
+                            <a href="/project3_ec/"><span class="arrow" aria-hidden="true">&lsaquo;</span> Project 3: Extra Credit - FPGA Demo</a>
+                            
+                            
+                        </nav>
+                        
+                    </article>
+
+                    
+                    <nav class="wa-docs-toc" aria-label="Table of Contents">
+                        <div class="h">Table of Contents</div>
+                        <ul class="wa-docs-toc-list">
+                            
+                            
+                            <li><a href="#project-introduction">Project Introduction</a></li>
+                            
+                            
+                            
+                            <li><a href="#important-note">Important Note</a></li>
+                            
+                            
+                            
+                            <li><a href="#problem-1-schematic">Problem 1: Schematic</a></li>
+                            
+                            
+                            
+                            <li><a href="#problem-2-pipeline-implementation">Problem 2: Pipeline Implementation</a></li>
+                            
+                            
+                            
+                            <li><a href="#submission-instructions">Submission Instructions</a></li>
+                            
+                            
+                        </ul>
+                    </nav>
+                    
+                </div>
+
+                <footer class="wa-docs-footer">
+                    <p>2026 ECE 552 Course Staff, University of Wisconsin-Madison</p>
+                </footer>
+            </main>
+        </div>
+
+        
+        <script>
+            (function () {
+                var btn = document.querySelector('[data-disclosure]');
+                var nav = document.getElementById('wa-docs-rail-nav');
+                if (!btn || !nav) return;
+                btn.addEventListener('click', function () {
+                    var hidden = nav.hasAttribute('data-mobile-hidden');
+                    if (hidden) {
+                        nav.removeAttribute('data-mobile-hidden');
+                    } else {
+                        nav.setAttribute('data-mobile-hidden', '');
+                    }
+                    btn.setAttribute('aria-expanded', hidden ? 'true' : 'false');
+                    btn.querySelector('.wa-docs-disclosure-icon').textContent = hidden ? '×' : '+';
+                });
+            })();
+        </script>
+    </body>
+</html>
