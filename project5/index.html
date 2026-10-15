@@ -1,0 +1,204 @@
+
+
+
+
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Project 5: Forwarding and Branch Prediction</title>
+        <link rel="stylesheet" href="/styles/site.css">
+
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Red+Hat+Display:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,500;1,600&family=Red+Hat+Mono:wght@300;400;500;600&display=swap" rel="stylesheet">
+    </head>
+
+    <body>
+        <div class="wa-docs-shell">
+            <aside class="wa-docs-rail">
+                
+                <div class="wa-docs-rail-head">
+                    <a class="wa-wordmark" href="/"><span class="wisc">ECE</span><span class="arch">552</span></a>
+                    <span class="wa-docs-rail-version">Fall 2026</span>
+                </div>
+
+                
+                <button type="button" class="wa-docs-disclosure-summary" aria-expanded="false" aria-controls="wa-docs-rail-nav" data-disclosure>
+                    <span class="wa-docs-disclosure-label">Project 5: Forwarding and Branch Prediction</span>
+                    <span class="wa-docs-disclosure-icon" aria-hidden="true">+</span>
+                </button>
+
+                <nav id="wa-docs-rail-nav" class="wa-docs-rail-nav" aria-label="Project 5: Forwarding and Branch Prediction" data-mobile-hidden>
+                    
+                    
+                    <a class="wa-docs-rail-link" href="/project1/">Project 1: RISC-V Assembly Language</a>
+                    
+                    <a class="wa-docs-rail-link" href="/project2/">Project 2: Digital Design and Debugging</a>
+                    
+                    <a class="wa-docs-rail-link" href="/project3/">Project 3: Single-Cycle Processor</a>
+                    
+                    <a class="wa-docs-rail-link" href="/project3_ec/">Project 3: Extra Credit - FPGA Demo</a>
+                    
+                    <a class="wa-docs-rail-link" href="/project4/">Project 4: Basic Pipelined Processor</a>
+                    
+                    <a class="wa-docs-rail-link is-active" href="/project5/">Project 5: Forwarding and Branch Prediction</a>
+                    
+                    <a class="wa-docs-rail-link" href="/schedule/">Project Schedule</a>
+                    <a class="wa-docs-rail-link" href="/rules/">Verilog Rules</a>
+                    <a class="wa-docs-rail-link" href="/html/reference.html">Reference Materials</a>
+                </nav>
+            </aside>
+
+            <main class="wa-docs-main">
+                <div class="wa-docs-topbar">
+                    <div class="wa-docs-breadcrumb">
+                        
+                        <span class="crumb-mono">ECE 552</span>
+                        <span class="crumb-sep" aria-hidden="true">/</span>
+                        
+                        <span class="crumb-cur">Project 5: Forwarding and Branch Prediction</span>
+                    </div>
+                    
+                    <div class="wa-docs-topbar-right">
+                        <a class="wa-docs-topbar-link" href="/">Back to Course Home</a>
+                    </div>
+                    
+                </div>
+
+                <div class="wa-docs-content">
+                    <article class="wa-docs-article">
+                        
+                        <h1 class="wa-docs-h1">Project 5: Forwarding and Branch Prediction</h1>
+                        <p class="wa-docs-page-tag">UW—Madison ECE 552: Fall 2026</p>
+
+                        <div class="instructions-box">
+<h2 id="project-introduction" tabindex="-1">Project Introduction</h2>
+<p>In this project phase, you will add optimizations to the processor that you pipelined in Project 4. It is recommended to start this project early.</p>
+<p>Implementations must be created using Verilog; SystemVerilog will not be allowed and will result in a grade of 0 for Problem 2 if used. This assignment is designed to be completed in a group of 2-3. Collaboration between groups is not permitted. IMPORTANT: Make your final submissions in your groups on Gradescope. If you do not, the teaching staff will have to do this manually.</p>
+<p>Generative artificial intelligence (e.g. ChatGPT) is permitted for this assignment; however, LLMs generally struggle with this type of hardware design work, and overly relying on them may make this project phase and subsequent phases significantly harder to complete.</p>
+<p>This project will be worth 7.5% of your final course grade. The automated tests on Gradescope comprise the majority of the points (mostly performance for this project). The schematic is worth a fair portion.</p>
+<p>All material is available in the <a href="https://github.com/wiscarch/riscv32i-arch-course-starter-fa26/tree/main/project4-and-5">Project 4 and 5 repository</a> on GitHub. You can clone the repository locally or on a CSL machine.</p>
+<p>If there are any issues with Gradescope or the files provided, please post on Piazza rather than emailing. If you are having difficulty with this project, office hours are held several times a week where assistance is available.</p>
+<p>Good luck!</p>
+</div>
+<div class="instructions-box">
+<h2 id="problem-1-schematic" tabindex="-1">Problem 1: Schematic</h2>
+<p>Update your schematic from Project 4 to include the optimization elements (EX-EX forwarding, MEM-EX forwarding, predict not taken branches).</p>
+<p>Since labelling the bit width of every signal (with a width of greater than 1) for every pipeline stage is tedious, you may label the bit width in the first stage in which the signal appears and represent the width of that signal (if greater than 1) with just a slash in subsequent stages.</p>
+</div>
+<div class="instructions-box">
+<h2 id="problem-2-optimizations" tabindex="-1">Problem 2: Optimizations</h2>
+<p>You must add the following optimizations to the processor that you pipelined in Project 4:</p>
+<ol>
+<li>EX-EX forwarding</li>
+<li>MEM-EX forwarding</li>
+<li>Branches are predicted to not be taken</li>
+</ol>
+<p>You are allowed to implement additional optimizations if you would like, but these are the minimum optimizations required to receive full credit for this project. Your processor will be graded both on accuracy and on performance in this project, and will be run against a reference model in Gradescope to do so.</p>
+<p>Again, all material is available in the <a href="https://github.com/wiscarch/riscv32i-arch-course-starter-fa26/tree/main/project4-and-5">Project 4 and 5 repository</a> on GitHub.</p>
+<h3 id="resources" tabindex="-1">Resources</h3>
+<p>The <a href="../html/reference.html">RISCV-32I specification document</a> is the primary document to reference how instructions are implemented.</p>
+<p>The <a href="../html/reference.html">reference sheet</a> is helpful when writing programs or as a quick reference.</p>
+<p>You may find <a href="https://ripes.dk/">this simulator</a> helpful for visualizing how your processor should execute, and for verifying functional correctness and performance.</p>
+<p>Using <a href="https://luplab.gitlab.io/rvcodecjs/">this decoder</a> to assemble RISC-V instructions is also recommended for testing and examining instructions when debugging.</p>
+<h3 id="gradescope" tabindex="-1">Gradescope</h3>
+<p>Submit your code to Gradescope as often as desired to verify your processor. Verilog coding rules are enforced for this project. A centralized list of these rules can be found <a href="../rules">here</a>. The rule-checking script will run every time the processor is submitted, first checking for compiler errors, then disallowed constructs. Once a submission passes the rules check, a trace comparison will be performed between the submitted processor and the reference implementation. You can run the exact same checker locally before submitting -- <code>ece552 validate -w *.v</code> -- see the starter repository's <code>python-ece552/README.md</code> for setup.</p>
+</div>
+<div class="instructions-box">
+<h2 id="submission-instructions" tabindex="-1">Submission Instructions</h2>
+<p>Submit the following files to the appropriate Gradescope assignment:</p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Deliverable</th>
+<th>Points</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>schematic.pdf</td>
+<td>20</td>
+<td>Graded manually, after the deadline. See Problem 1.</td>
+</tr>
+<tr>
+<td>All Verilog files required for <br>your processor to run (no folder hierarchy)</td>
+<td>25 (accuracy tests)<br>100 (performance tests)</td>
+<td>Autograded. If it is used in your design, include it.<br>See Problem 2.</td>
+</tr>
+<tr>
+<td><code>project5.txt</code></td>
+<td>0</td>
+<td>Graded manually, after the deadline. Submission Template<br>[Group Member 1]: Name<br>[Group Member 2]: Name<br>[Group Member 3]: Name</td>
+</tr>
+</tbody>
+</table>
+</div><p>Filenames must match exactly. Please double check to ensure that you have submitted all of the required files.</p>
+<p>This project will be worth 7.5% of your final course grade. <strong>Gradescope will only show your autograded Verilog score immediately -- schematic and free-response points aren't reflected until they're graded manually, after the deadline.</strong></p>
+</div>
+
+
+                        
+                        <nav class="wa-docs-prev-next">
+                            
+                            <a href="/project4/"><span class="arrow" aria-hidden="true">&lsaquo;</span> Project 4: Basic Pipelined Processor</a>
+                            
+                            
+                        </nav>
+                        
+                    </article>
+
+                    
+                    <nav class="wa-docs-toc" aria-label="Table of Contents">
+                        <div class="h">Table of Contents</div>
+                        <ul class="wa-docs-toc-list">
+                            
+                            
+                            <li><a href="#project-introduction">Project Introduction</a></li>
+                            
+                            
+                            
+                            <li><a href="#problem-1-schematic">Problem 1: Schematic</a></li>
+                            
+                            
+                            
+                            <li><a href="#problem-2-optimizations">Problem 2: Optimizations</a></li>
+                            
+                            
+                            
+                            <li><a href="#submission-instructions">Submission Instructions</a></li>
+                            
+                            
+                        </ul>
+                    </nav>
+                    
+                </div>
+
+                <footer class="wa-docs-footer">
+                    <p>2026 ECE 552 Course Staff, University of Wisconsin-Madison</p>
+                </footer>
+            </main>
+        </div>
+
+        
+        <script>
+            (function () {
+                var btn = document.querySelector('[data-disclosure]');
+                var nav = document.getElementById('wa-docs-rail-nav');
+                if (!btn || !nav) return;
+                btn.addEventListener('click', function () {
+                    var hidden = nav.hasAttribute('data-mobile-hidden');
+                    if (hidden) {
+                        nav.removeAttribute('data-mobile-hidden');
+                    } else {
+                        nav.setAttribute('data-mobile-hidden', '');
+                    }
+                    btn.setAttribute('aria-expanded', hidden ? 'true' : 'false');
+                    btn.querySelector('.wa-docs-disclosure-icon').textContent = hidden ? '×' : '+';
+                });
+            })();
+        </script>
+    </body>
+</html>
