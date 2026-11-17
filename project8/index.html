@@ -1,0 +1,214 @@
+
+
+
+
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Project 8: Extra Credit</title>
+        <link rel="stylesheet" href="/styles/site.css">
+
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Red+Hat+Display:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,500;1,600&family=Red+Hat+Mono:wght@300;400;500;600&display=swap" rel="stylesheet">
+    </head>
+
+    <body>
+        <div class="wa-docs-shell">
+            <aside class="wa-docs-rail">
+                
+                <div class="wa-docs-rail-head">
+                    <a class="wa-wordmark" href="/"><span class="wisc">ECE</span><span class="arch">552</span></a>
+                    <span class="wa-docs-rail-version">Fall 2026</span>
+                </div>
+
+                
+                <button type="button" class="wa-docs-disclosure-summary" aria-expanded="false" aria-controls="wa-docs-rail-nav" data-disclosure>
+                    <span class="wa-docs-disclosure-label">Project 8: Extra Credit</span>
+                    <span class="wa-docs-disclosure-icon" aria-hidden="true">+</span>
+                </button>
+
+                <nav id="wa-docs-rail-nav" class="wa-docs-rail-nav" aria-label="Project 8: Extra Credit" data-mobile-hidden>
+                    
+                    
+                    <a class="wa-docs-rail-link" href="/project1/">Project 1: RISC-V Assembly Language</a>
+                    
+                    <a class="wa-docs-rail-link" href="/project2/">Project 2: Digital Design and Debugging</a>
+                    
+                    <a class="wa-docs-rail-link" href="/project3/">Project 3: Single-Cycle Processor</a>
+                    
+                    <a class="wa-docs-rail-link" href="/project3_ec/">Project 3: Extra Credit - FPGA Demo</a>
+                    
+                    <a class="wa-docs-rail-link" href="/project4/">Project 4: Basic Pipelined Processor</a>
+                    
+                    <a class="wa-docs-rail-link" href="/project5/">Project 5: Forwarding and Branch Prediction</a>
+                    
+                    <a class="wa-docs-rail-link" href="/project6/">Project 6: Multi-Cycle Memory</a>
+                    
+                    <a class="wa-docs-rail-link" href="/project6_ec/">Project 6: Extra Credit - FPGA Demo</a>
+                    
+                    <a class="wa-docs-rail-link" href="/project7/">Project 7: Cache Integration</a>
+                    
+                    <a class="wa-docs-rail-link is-active" href="/project8/">Project 8: Extra Credit</a>
+                    
+                    <a class="wa-docs-rail-link" href="/schedule/">Project Schedule</a>
+                    <a class="wa-docs-rail-link" href="/rules/">Verilog Rules</a>
+                    <a class="wa-docs-rail-link" href="/html/reference.html">Reference Materials</a>
+                </nav>
+            </aside>
+
+            <main class="wa-docs-main">
+                <div class="wa-docs-topbar">
+                    <div class="wa-docs-breadcrumb">
+                        
+                        <span class="crumb-mono">ECE 552</span>
+                        <span class="crumb-sep" aria-hidden="true">/</span>
+                        
+                        <span class="crumb-cur">Project 8: Extra Credit</span>
+                    </div>
+                    
+                    <div class="wa-docs-topbar-right">
+                        <a class="wa-docs-topbar-link" href="/">Back to Course Home</a>
+                    </div>
+                    
+                </div>
+
+                <div class="wa-docs-content">
+                    <article class="wa-docs-article">
+                        
+                        <h1 class="wa-docs-h1">Project 8: Extra Credit</h1>
+                        <p class="wa-docs-page-tag">UW—Madison ECE 552: Fall 2026</p>
+
+                        <div class="instructions-box">
+<h2 id="project-introduction" tabindex="-1">Project Introduction</h2>
+<p>In this project phase, you have an opportunity to earn extra credit. You can earn a maximum of 10% improvement to your final course grade through these activities.</p>
+</div>
+<div class="instructions-box">
+<h2 id="instructions" tabindex="-1">Instructions</h2>
+<p>An autograder on Gradescope will run a benchmark program on your processor. If you a) pass all correctness tests from Project 7, b) achieve correctness on the benchmark, and c) beat the reference implementation's CPI by at least 10%, you will receive a 1% boost to your final course grade. The reference CPI is <strong>1.80</strong>, so the target is a CPI of <strong>1.62</strong> or lower.</p>
+<p>Every design and every optimization must remain a single-issue, in-order RV32I processor: no ISA extensions (e.g. multiply), out-of-order execution, superscalar or dual issue, or VLIW.</p>
+<p>The benchmark has four parts:</p>
+<ul>
+<li>a streaming pass over an array much larger than the cache</li>
+<li>repeated accesses to addresses that conflict in the reference cache</li>
+<li>data-dependent branches: sorting and searching pseudo-random data</li>
+<li>a small matrix multiply</li>
+</ul>
+<p>The benchmark program is not released. Gradescope reports whether your processor ran it correctly and its CPI, and posts your CPI to the leaderboard. Submit the same Project 6-and-7 design files as before. The benchmark runs with 64 KB of data memory (instead of 1 KB), so data evicted from your cache is read back from memory: stores must actually reach memory.</p>
+<p>Cache capacity is limited: each cache may hold 1 KB of data, plus at most 16 lines (256 B) of extra buffering such as a prefetch or victim buffer. Changing the associativity or organization at the same capacity is fine. This is checked automatically; a design over the limit gets no leaderboard entry. The automatic check is necessary but not sufficient: the teaching staff will inspect the RTL of every design that wins an award.</p>
+<p>Gradescope also synthesizes your processor and posts two more numbers to the leaderboard: its <strong>Fmax</strong> (nextpnr, Lattice ECP5, median over five fixed seeds) and its <strong>area</strong> (Yosys, SkyWater 130 nm standard cells). Only a design that earns a CPI entry on the leaderboard gets Fmax and area numbers. Your design must use a single clock, <code>i_clk</code>: a design with any other clock (for example a gated or divided clock) gets no Fmax or area.</p>
+<p>Three leaderboard awards are each worth 1% of your final course grade, independently of each other and of the 1.62 target above:</p>
+<ul>
+<li>the top 3 teams by CPI</li>
+<li>the top 3 teams by Fmax</li>
+<li>the top 3 teams by area</li>
+</ul>
+<p>To be eligible for any of them, your CPI must be below the reference's <strong>1.80</strong>. Rankings use each team's active Gradescope submission and are frozen at the Project 8 deadline. Teams tied at the cut all receive the award.</p>
+<p>You may also receive extra credit for any optimization you add to your processor. Each one is worth 1%. Some examples:</p>
+<ul>
+<li>a better branch predictor, a branch target buffer, or a return address stack</li>
+<li>a prefetcher</li>
+<li>higher cache associativity or a better replacement policy</li>
+<li>a victim cache or a non-blocking cache</li>
+</ul>
+<p>Each optimization must be described in your report, including your processor's CPI before and after it. You must also show that it works to the teaching staff in a discussion section; the burden of proof is on you.</p>
+<p>Anything not in the examples above must be approved in writing. An email describing the proposed implementation should be sent to the instructor and the TAs together.</p>
+<p>You may also propose your own extra credit idea, whether or not it is an optimization. Email the instructor and the TAs together with a short description of what you want to do; we will discuss its scope with you and agree on what it is worth before you start.</p>
+<p>You must complete a short report to receive extra credit. Submit it on Gradescope by the Project 8 due date, <strong>12/8</strong> (see Gradescope for the exact time).</p>
+<p>Generative artificial intelligence (e.g. ChatGPT) may <strong>not</strong> be used to write code, create schematics, or debug for this assignment; all Verilog, schematics, and debugging must be your group's own work. AI may be used for supplementary activities, such as writing sample assembly programs, but any such use must be disclosed in an <code>ai_disclosure.txt</code> file submitted with your project. The disclosure must describe what AI was used for and include the prompts that were used. <code>ai_disclosure.txt</code> is required even if you did not use AI; in that case, it should state &quot;We did not use generative AI for any part of this assignment.&quot;</p>
+<p>As in previous project phases, Verilog coding rules are still enforced (see the <a href="../rules">Verilog Rules</a> page) -- you can run the exact same checker locally before submitting: <code>ece552 validate -w *.v</code> (see the starter repository's <code>python-ece552/README.md</code> for setup).</p>
+<p>If there are any issues with Gradescope or the files provided, please post on Piazza rather than emailing. If you are having difficulty with this project, office hours are held several times a week where assistance is available.</p>
+</div>
+<div class="instructions-box">
+<h2 id="submission-instructions" tabindex="-1">Submission Instructions</h2>
+<p>Submit the following files to the Project 8 assignment on Gradescope:</p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>Deliverable</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>All Verilog files required for <br>your processor to run (no folder hierarchy)</td>
+<td>Autograded: correctness, cache capacity, benchmark CPI, Fmax and area.</td>
+</tr>
+<tr>
+<td><code>project8.txt</code></td>
+<td>Submission Template<br>[Group Member 1]: Name<br>[Group Member 2]: Name<br>[Group Member 3]: Name</td>
+</tr>
+<tr>
+<td><code>ai_disclosure.txt</code></td>
+<td>Required. Describe what AI was used for and include the prompts that were used, or state that you did not use generative AI.</td>
+</tr>
+<tr>
+<td>Report</td>
+<td>Submitted on Gradescope by <strong>12/8</strong>. Describe each optimization you are claiming, with your processor's CPI before and after it.</td>
+</tr>
+</tbody>
+</table>
+</div><p>Filenames must match exactly. Please double check to ensure that you have submitted all of the required files.</p>
+</div>
+
+
+                        
+                        <nav class="wa-docs-prev-next">
+                            
+                            <a href="/project7/"><span class="arrow" aria-hidden="true">&lsaquo;</span> Project 7: Cache Integration</a>
+                            
+                            
+                        </nav>
+                        
+                    </article>
+
+                    
+                    <nav class="wa-docs-toc" aria-label="Table of Contents">
+                        <div class="h">Table of Contents</div>
+                        <ul class="wa-docs-toc-list">
+                            
+                            
+                            <li><a href="#project-introduction">Project Introduction</a></li>
+                            
+                            
+                            
+                            <li><a href="#instructions">Instructions</a></li>
+                            
+                            
+                            
+                            <li><a href="#submission-instructions">Submission Instructions</a></li>
+                            
+                            
+                        </ul>
+                    </nav>
+                    
+                </div>
+
+                <footer class="wa-docs-footer">
+                    <p>2026 ECE 552 Course Staff, University of Wisconsin-Madison</p>
+                </footer>
+            </main>
+        </div>
+
+        
+        <script>
+            (function () {
+                var btn = document.querySelector('[data-disclosure]');
+                var nav = document.getElementById('wa-docs-rail-nav');
+                if (!btn || !nav) return;
+                btn.addEventListener('click', function () {
+                    var hidden = nav.hasAttribute('data-mobile-hidden');
+                    if (hidden) {
+                        nav.removeAttribute('data-mobile-hidden');
+                    } else {
+                        nav.setAttribute('data-mobile-hidden', '');
+                    }
+                    btn.setAttribute('aria-expanded', hidden ? 'true' : 'false');
+                    btn.querySelector('.wa-docs-disclosure-icon').textContent = hidden ? '×' : '+';
+                });
+            })();
+        </script>
+    </body>
+</html>
